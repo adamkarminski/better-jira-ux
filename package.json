@@ -22,6 +22,8 @@
     "write-file-webpack-plugin": "4.5.1"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "brownies": "^3.0.0",
+    "chrome-extension-async": "^3.4.1"
   }
 }

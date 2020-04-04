@@ -7,7 +7,8 @@
   "content_scripts": [
 	{
 	  "matches": ["*://bethink.atlassian.net/*"],
-	  "js": ["content.bundle.js"]
+	  "js": ["content.bundle.js"],
+	  "css": ["content.css"]
     }
   ],
   "browser_action": {

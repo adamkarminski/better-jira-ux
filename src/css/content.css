@@ -1,0 +1,20 @@
+.usersDropdown {
+	background: white;
+	display: none;
+	height: 300px;
+	max-width: 90vw;
+	position: fixed;
+	width: 200px;
+}
+
+.usersDropdown li {
+	padding: 10px 20px;
+}
+
+.usersDropdown li a {
+	color: gray;
+}
+
+.usersDropdown li a:hover {
+	background-color: #fafafa;
+}

@@ -2,6 +2,7 @@ import '../img/icon-128.png'
 import '../img/icon-34.png'
 
 import axios from 'axios'
+import { local } from 'brownies'
 
 const init = () => {
 	console.log('BJU - Initializing background')
@@ -36,15 +37,39 @@ const init = () => {
 	}
 
 	async function getUsersList () {
+		let response = await jiraGetRequest('/users')
 
+		return response
 	}
 
-	chrome.runtime.onMessage.addListener((message) => {
-		var msg = JSON.parse(message)
+	const actionsMap = {
+		'getJiraUsers': getUsersList,
+	}
 
-		console.log('BJU - Assigning user')
+	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		// var msg = JSON.parse(request, sender, sendResponse)
+		// console.log('BJU - Assigning user')
+		// assignUser(msg.values.issueId, '5a7347602aa9952cbfa55a7b')
+		console.log('BJU - actionsMap', actionsMap)
 
-		assignUser(msg.values.issueId, '5a7347602aa9952cbfa55a7b')
+		if (!('action' in request)) {
+			console.log(`BJU - onMessage - addListener - Bad request - No action specified`, request)
+			return false;
+		}
+
+		if (!(request.action in actionsMap)) {
+			console.log(`BJU - onMessage - addListener - Unknown action`, request)
+			return false;
+		}
+
+		console.log('BJU - action chosen', actionsMap[request.action])
+
+		actionsMap[request.action]().then((response) => {
+			console.log('BJU - Sending response', response)
+			sendResponse(response)
+		})
+
+		return true;
 	})
 }
 

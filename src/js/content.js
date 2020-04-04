@@ -1,3 +1,5 @@
+import { local } from 'brownies'
+
 let init = () => {
 	// TODO: Load it when the UI is ready
 	let avatarHtml = '<img src="https://wnl-platform-production-storage.s3.eu-central-1.amazonaws.com/public/unassigned.png" class="ghx-avatar-img" data-tooltip="Unassigned">'
@@ -12,22 +14,105 @@ let init = () => {
 		}
 	})
 
-	document.querySelectorAll('img.ghx-avatar-img').forEach(element => {
-		if (element.getAttribute('listener') !== 'true') {
-			element.addEventListener('click', (e) => {
-				let parent = e.target.parentElement,
-					issueId = parent.getElementsByClassName('ghx-key')[0].innerText
+	function sendMessage(params) {
+		return new Promise((resolve, reject) => {
+			chrome.runtime.sendMessage(params, (response) => {
+				resolve(response)
+			})
+		})
+	}
 
-				e.preventDefault();
+	async function getJiraUsers() {
+		delete local.jiraUsers
 
-				console.log('BJU - Sending content message...')
+		console.log(`BJU - getJiraUsers - typeof jiraUsers - ${local.jiraUsers}`)
+		if (local.jiraUsers === null) {
+			console.log(`BJU - getJiraUsers - sending message...`)
 
-				chrome.runtime.sendMessage(`{"type":"assign","values":{"issueId":"${issueId}"}}`)
-			}, true)
+			let usersList = await sendMessage({ "action": "getJiraUsers" })
 
-			element.setAttribute('listener', 'true')
+			console.log(`BJU - getJiraUsers - Received list - ${usersList}`)
+
+			local.jiraUsers = usersList
+
+			return usersList
 		}
-	})
+
+		console.log(`BJU - getJiraUsers - List found Local storage...`)
+		return local.jiraUsers
+	}
+
+	async function assignUser(issueId, accountId) {
+		chrome.runtime.sendMessage(
+			{
+				"action": "assignUser",
+				"values": {
+					"issueId": issueId,
+					"accountId": accountId,
+				},
+			}
+		)
+	}
+
+	async function createUsersDropdown() {
+		console.log('BJU - createUsersDropdown')
+		let html = ''
+		let usersList = await getJiraUsers()
+
+		usersList.forEach(user => {
+			let listItem = `
+				<li>
+					<a href="" data-accountId="${user.accountId}">
+						${user.displayName}
+					</a>
+				</li>
+			`
+			html += listItem
+		})
+
+		html = `
+			<div id="usersDropdown" class="usersDropdown" data-issueKey="">
+				<ul>
+					${html}ą
+				</ul>
+			</div>
+		`
+
+		console.log('BSU - Users dropdown', html)
+
+		document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', html)
+
+		return
+	}
+
+	function bindUserAssign() {
+		console.log('BJU - Bind user assign asdasdfasdfasdf')
+		createUsersDropdown().then(() => {
+
+			document.querySelectorAll('img.ghx-avatar-img').forEach(element => {
+				if (element.getAttribute('listener') !== 'true') {
+					element.addEventListener('click', (e) => {
+						e.preventDefault()
+						e.stopPropagation()
+
+						let parent = e.target.parentElement
+						let issueKey = parent.getElementsByClassName('ghx-key')[0].innerText
+						let dropdown = document.getElementById('usersDropdown')
+
+						console.log(`BJU - Bind assign ${issueKey}`)
+
+						dropdown.setAttribute('data-issueKey', issueKey)
+						dropdown.setAttribute('style',
+						`display: inherit; top: ${e.clientY}px; left: ${e.clientX-150}px;`)
+					}, true)
+
+					element.setAttribute('listener', 'true')
+				}
+			})
+		})
+	}
+
+	bindUserAssign()
 }
 
 window.onload = init;

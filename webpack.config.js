@@ -68,6 +68,11 @@ var options = {
         }))
       }
     }]),
+	new CopyWebpackPlugin([{
+		from: "src/css/content.css",
+		to: path.join(__dirname, 'build'),
+		force: true,
+	}]),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "popup.html"),
       filename: "popup.html",
