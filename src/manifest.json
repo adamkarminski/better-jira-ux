@@ -1,9 +1,15 @@
 {
-  "name": "Chrome Extension Webpack",
+  "name": "better-jira-ux",
   "options_page": "options.html",
   "background": {
     "page": "background.html"
   },
+  "content_scripts": [
+	{
+	  "matches": ["*://bethink.atlassian.net/*"],
+	  "js": ["content.bundle.js"]
+    }
+  ],
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": "icon-34.png"
