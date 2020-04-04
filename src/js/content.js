@@ -18,6 +18,8 @@ let init = () => {
 				let parent = e.target.parentElement,
 					issueId = parent.getElementsByClassName('ghx-key')[0].innerText
 
+				e.preventDefault();
+
 				console.log('BJU - Sending content message...')
 
 				chrome.runtime.sendMessage(`{"type":"assign","values":{"issueId":"${issueId}"}}`)
