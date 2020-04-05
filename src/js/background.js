@@ -15,8 +15,8 @@ const init = () => {
 		}
 	})
 
-	async function jiraGetRequest (path) {
-		let response = await jiraApi.get(path)
+	async function jiraGetRequest (path, params) {
+		let response = await jiraApi.get(path, params)
 
 		return response.data
 	}
@@ -39,10 +39,16 @@ const init = () => {
 	}
 
 	async function getUsersList () {
-		let response = await jiraGetRequest('/users')
+		let response = await jiraGetRequest('/users/search', {
+			params: {
+				maxResults: 150,
+			}
+		})
 
 		return response
 	}
+
+	getUsersList()
 
 	const actionsMap = {
 		'getJiraUsers': getUsersList,

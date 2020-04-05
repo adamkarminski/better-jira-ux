@@ -63,8 +63,6 @@ let init = () => {
 	}
 
 	async function getJiraUsers() {
-		delete local.jiraUsers
-
 		console.log(`BJU - getJiraUsers - typeof jiraUsers - ${local.jiraUsers}`)
 		if (local.jiraUsers === null) {
 			console.log(`BJU - getJiraUsers - sending message...`)
@@ -123,13 +121,21 @@ let init = () => {
 
 		node.innerHTML = `
 			<div id="usersDropdown" class="usersDropdown" data-issueKey="">
+				<div class="usersDropdownControls">
+					<input type="text" class="usersDropdownFilter">
+					<span class="usersDropdownRefresh">♻️</span>
+				</div>
 				${html}
 			</div>
 		`
 
 		document.getElementsByTagName('body')[0].appendChild(node)
 
-		document.querySelectorAll('.usersDropdownItem').forEach((element) => {
+		let dropdown = document.getElementById('usersDropdown')
+
+		dropdown.getElementById('')
+
+		dropdown.querySelectorAll('.usersDropdownItem').forEach((element) => {
 			element.addEventListener('click', (e) => {
 				console.log(e)
 				console.log(e.path)
