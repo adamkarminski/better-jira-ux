@@ -38,7 +38,7 @@ function setupUsersDropdown() {
 
 	virtualDropdown.innerHTML = `
 		<div class="usersDropdownControls">
-			<input type="text" class="usersDropdownFilter">
+			<input type="text" class="usersDropdownSearch" placeholder="Type to filter...">
 			<span class="usersDropdownRefresh">♻️</span>
 		</div>
 		<div id="usersDropdownList" class="usersDropdownList">
@@ -53,8 +53,13 @@ function setupUsersDropdown() {
  */
 
  function showDropdown(issueKey, left, top) {
+	let searchElement = dropdown.getElementsByClassName('usersDropdownSearch')[0]
+
  	dropdown.setAttribute('data-issue-key', issueKey)
  	dropdown.setAttribute('style', `display: inherit; left: ${left}px; top: ${top}px;`)
+
+	searchElement.focus()
+	searchElement.select()
  }
 
  function hideDropdown() {
@@ -71,7 +76,12 @@ async function renderUsersList(filterText) {
 
 	log('assignDropdown.js::renderUsersList', filteredList)
 
-	injectUsersList(filteredList)
+	await injectUsersList(filteredList)
+	bindAssignOnClick()
+}
+
+async function searchUsersList(searchText) {
+	renderUsersList(searchText)
 }
 
 function refreshUsersList() {
@@ -182,6 +192,15 @@ function listenerHideDropdownOnClick(e) {
 	}
 }
 
+function listenerSearchUsersListOnInput(e) {
+	log('assignDropdown.js::listenerSearchUsersListOnInput', e)
+	searchUsersList(`${e.target.value}`)
+}
+
+function listenerRefreshUsersListOnClick(e) {
+	refreshUsersList()
+}
+
 async function listenerAssignUserOnClick(e) {
 	let userListItem = findElementByClassName(e.path, 'usersDropdownItem')
 	if (userListItem === false) {
@@ -224,9 +243,14 @@ function bindDropdownShowOnAvatarClick() {
 		})
 }
 
+function bindSearchUsersListOnInput() {
+	dropdown.getElementsByClassName('usersDropdownSearch')[0]
+		.addEventListener('input', listenerSearchUsersListOnInput)
+}
+
 function bindRefreshUsersListOnClick() {
 	dropdown.getElementsByClassName('usersDropdownRefresh')[0]
-		.addEventListener('click', refreshUsersList)
+		.addEventListener('click', listenerRefreshUsersListOnClick)
 }
 
 function bindHideDropdownOnClick() {
@@ -241,8 +265,8 @@ const init = async (providedContext) => {
 	await setup (providedContext)
 	await renderUsersList('')
 
-	bindAssignOnClick()
 	bindDropdownShowOnAvatarClick()
+	bindSearchUsersListOnInput()
 	bindRefreshUsersListOnClick()
 	bindHideDropdownOnClick()
 }
