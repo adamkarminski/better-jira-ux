@@ -1,9 +1,10 @@
-import { sendMessage } from '../../lib/communication'
+import { log } from '../../../lib/logger'
+import { sendMessage } from '../../../lib/communication'
 
 import config from '../assign.config'
 
-const context
-const contextConfig
+let context
+let contextConfig
 const unassignedAvatarHtml = {
 	'backlog': `
 		<img src="${config.avatars.unassignedUrl}" class="ghx-avatar-img" data-tooltip="Unassigned">
@@ -22,6 +23,8 @@ function injectUnassignedAvatarHtml(context, element) {
 }
 
 function injectUnassignedAvatars() {
+	log('unassignedAvatar::injectUnassignedAvatars', context)
+
 	context.issuesContainer
 		.querySelectorAll(contextConfig.avatarContainerSelector)
 		.forEach(element => {
@@ -29,13 +32,16 @@ function injectUnassignedAvatars() {
 		})
 }
 
-function setup(context) {
-	context = context
+function setup(providedContext) {
+	context = providedContext
 	contextConfig = config.avatars[context.name]
+	log('unassignedAvatar::setup', ['Setup finished', context])
 }
 
-const init = async (context) => {
-	setup(context)
+const init = async (providedContext) => {
+	log('unassignedAvatar::init', providedContext)
+
+	setup(providedContext)
 	await injectUnassignedAvatars()
 }
 

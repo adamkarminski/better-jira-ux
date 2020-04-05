@@ -5,6 +5,8 @@ import { log } from './lib/logger.js'
 import assign from './modules/assign/assign.content'
 
 const windowOnload = () => {
+	log('content.js::windowOnload', 'Starting content')
+
 	assign.init()
 }
 

@@ -4,8 +4,10 @@ import '../img/icon-34.png'
 import axios from 'axios'
 import { local } from 'brownies'
 
+import { log } from './lib/logger'
+
 const init = () => {
-	console.log('BJU - Initializing background')
+	log('background.js::init', 'Initializing background')
 
 	const jiraApi = axios.create({
 		'baseURL': 'https://bethink.atlassian.net/rest/api/latest',
@@ -56,11 +58,6 @@ const init = () => {
 	}
 
 	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-		// var msg = JSON.parse(request, sender, sendResponse)
-		// console.log('BJU - Assigning user')
-		// assignUser(msg.values.issueId, '5a7347602aa9952cbfa55a7b')
-		console.log('BJU - actionsMap', actionsMap)
-
 		if (!('action' in request)) {
 			console.log(`BJU - onMessage - addListener - Bad request - No action specified`, request)
 			return false;

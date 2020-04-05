@@ -1,24 +1,42 @@
+import { local } from 'brownies'
+
+import { log } from '../../../lib/logger'
 import { jiraUsersGetAll, jiraIssueAssignUser } from '../../../lib/jira-messages'
-import { findElementByClassName } from '../../lib/dom'
+import { findElementByClassName } from '../../../lib/dom'
 import config from '../assign.config'
 
-const context
-const dropdown
+let context
+let dropdown
 
-async function setup(context, data) {
-	context = context
+/**
+ * Table of contents
+ * 1. Setup
+ * 2. Dropdown behavior
+ * 3. User list behavior
+ * 4. Issues list behavior
+ * 5. Listeners
+ * 6. Binders
+ * 7. Init and export
+ */
+
+/**
+ * 1. Setup
+ */
+
+async function setup(providedContext) {
+	context = providedContext
 
 	await setupUsersDropdown()
 }
 
 function setupUsersDropdown() {
-	dropdown = document.createElement('div')
+	let virtualDropdown = document.createElement('div')
 
-	dropdown.setAttribute('id', 'usersDropdown')
-	dropdown.setAttribute('class', 'usersDropdown')
-	dropdown.setAttribute('data-issue-key', '')
+	virtualDropdown.setAttribute('id', 'usersDropdown')
+	virtualDropdown.setAttribute('class', 'usersDropdown')
+	virtualDropdown.setAttribute('data-issue-key', '')
 
-	dropdown.innerHTML = `
+	virtualDropdown.innerHTML = `
 		<div class="usersDropdownControls">
 			<input type="text" class="usersDropdownFilter">
 			<span class="usersDropdownRefresh">♻️</span>
@@ -27,23 +45,45 @@ function setupUsersDropdown() {
 		</div>
 	`
 
-	dropdown = document.getElementsByTagName('body')[0].appendChild(dropdown)
-
-	return dropdown
+	dropdown = document.getElementsByTagName('body')[0].appendChild(virtualDropdown)
 }
 
-function filterUsersList(list, text) {
-	text = text.toString().toLowerCase()
+/**
+ * 2. Dropdown behavior
+ */
 
-	return list.filter(user =>
-		user.accountType === 'atlassian' &&
-		user.active &&
-		user.displayName.toLowerCase().indexOf(text) > -1
-	)
+ function showDropdown(issueKey, left, top) {
+ 	dropdown.setAttribute('data-issue-key', issueKey)
+ 	dropdown.setAttribute('style', `display: inherit; left: ${left}px; top: ${top}px;`)
+ }
+
+ function hideDropdown() {
+ 	dropdown.setAttribute('style', 'display: none;')
+ }
+
+ /**
+  * 3. User list behavior
+  */
+
+async function renderUsersList(filterText) {
+	let usersList = await jiraUsersGetAll()
+	let filteredList = filterUsersList(usersList, filterText)
+
+	log('assignDropdown.js::renderUsersList', filteredList)
+
+	injectUsersList(filteredList)
+}
+
+function refreshUsersList() {
+	// TODO: Move cache handling to the component
+	delete local.jiraUsers
+
+	renderUsersList('')
 }
 
 function injectUsersList(list) {
 	let html = ''
+	let listItem
 
 	list.unshift({
 		'accountId': '',
@@ -54,7 +94,7 @@ function injectUsersList(list) {
 	})
 
 	list.forEach(user => {
-		let listItem = `
+		listItem = `
 			<div class="usersDropdownItem" data-accountId="${user.accountId}">
 				<img class="usersDropdownImage" src="${user.avatarUrls['32x32']}">
 				<span class="usersDropdownDisplayName">${user.displayName}</span>
@@ -63,23 +103,62 @@ function injectUsersList(list) {
 		html += listItem
 	})
 
-	dropdown.getElementById('usersDropdownList').innerHTML = html
+	log('assignDropdown.js::injectUsersList', list)
+
+	dropdown.getElementsByClassName('usersDropdownList')[0].innerHTML = html
 }
 
-async function renderUsersList(filterText) {
-	let usersList = await jiraUsersGetAll()
+function filterUsersList(list, text) {
+	text = `${text}`.toLowerCase()
 
-	injectUsersList(filterUsersList(usersList, filterText))
+	return list.filter(user =>
+		user.accountType === 'atlassian' &&
+		user.active &&
+		user.displayName.toLowerCase().indexOf(text) > -1
+	)
 }
 
-function showDropdown(issueKey, left, top) {
-	dropdown.setAttribute('data-issue-key', issueKey)
-	dropdown.setAttribute('style', `display: inherit; left: ${left}px; top: ${top}px;`)
+function getUserListItemData(userListItem) {
+	return {
+		'displayName': userListItem.getElementsByClassName('usersDropdownDisplayName')[0].innerText,
+		'avatar': {
+			'src': userListItem.getElementsByClassName('usersDropdownImage')[0].getAttribute('src')
+		}
+	}
 }
 
-function hideDropdown() {
-	dropdown.setAttribute('style', 'display: none;')
+/**
+ * 4. Issues list behavior
+ */
+
+function getActiveIssue(issuesContainer, issueKey) {
+	log('assignDropdown::getActiveIssue', {issuesContainer, issueKey})
+	return issuesContainer
+		.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
 }
+
+function getActiveIssueAvatar(issuesContainer, issueKey) {
+	return getActiveIssue(issuesContainer, issueKey)
+		.getElementsByClassName(config.avatars.avatarClass)[0]
+}
+
+function activeIssueAvatarLoading(issuesContainer, issueKey) {
+	let avatar = getActiveIssueAvatar(issuesContainer, issueKey)
+
+	avatar.setAttribute('style', 'opacity: 50%;')
+}
+
+function activeIssueAvatarSet(issuesContainer, issueKey, imageSource, tooltip) {
+	let avatar = getActiveIssueAvatar(issuesContainer, issueKey)
+
+	avatar.setAttribute('style', '')
+	avatar.setAttribute('src', imageSource)
+	avatar.setAttribute('data-tooltip', tooltip)
+}
+
+/**
+ * 5. Listeners
+ */
 
 function listenerShowDropdownOnClick(e) {
 	e.preventDefault()
@@ -103,43 +182,6 @@ function listenerHideDropdownOnClick(e) {
 	}
 }
 
-function getUserListItemData(userListItem) {
-	return {
-		'displayName': userListItem.getElementsByClassName('usersDropdownDisplayName')[0].innerText,
-		'avatar': {
-			'src': userListItem.getElementsByClassName('usersDropdownImage')[0].getAttribute('src')
-		}
-	}
-}
-
-// BEGIN - TO JIRA-UI?
-
-function getActiveIssue(issuesContainer, issueKey) {
-	return issuesContainer
-		.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
-}
-
-function getActiveIssueAvatar(issuesContainer, issueKey) {
-	return getActiveIssue(issuesContainer, issueKey)
-		.getElementsByClassName(config.avatars.avatarClass)[0]
-}
-
-function activeIssueAvatarLoading(issuesContainer, issueKey) {
-	let avatar = getActiveIssueAvatar(issuesContainer, issueKey)
-
-	avatar.setAttribute('style', 'opacity: 50%;')
-}
-
-function activeIssueAvatarSet(issueKey, imageSource, tooltip) {
-	let avatar = getActiveIssueAvatar(context.issuesContainer, issueKey)
-
-	activeIssueAvatar.setAttribute('style', '')
-	activeIssueAvatar.setAttribute('src', imageSource)
-	activeIssueAvatar.setAttribute('data-tooltip', tooltip)
-}
-
-// END - TO JIRA-UI?
-
 async function listenerAssignUserOnClick(e) {
 	let userListItem = findElementByClassName(e.path, 'usersDropdownItem')
 	if (userListItem === false) {
@@ -147,29 +189,33 @@ async function listenerAssignUserOnClick(e) {
 	}
 
 	let response
-	let issueKey = dropdown.getAttribute('data-issueKey')
+	let issueKey = dropdown.getAttribute('data-issue-key')
 	let accountId = userListItem.getAttribute('data-accountId')
 
 	activeIssueAvatarLoading(context.issuesContainer, issueKey)
 	response = await jiraIssueAssignUser(issueKey, accountId)
 
-	newUser = getUserListItemData(userListItem)
+	let newUser = getUserListItemData(userListItem)
 	activeIssueAvatarSet(
-		context.issuesContainer, issueKey, newUser.avatars.src, newUser.displayName
+		context.issuesContainer, issueKey, newUser.avatar.src, newUser.displayName
 	)
 
 	hideDropdown()
 }
 
+/**
+ * 6. Binders
+ */
+
 function bindAssignOnClick () {
-	dropdown.getElementsByClassName('usersDropdownItem').forEach((element) => {
+	dropdown.querySelectorAll('.usersDropdownItem').forEach(element => {
 		element.addEventListener('click', listenerAssignUserOnClick)
 	})
 }
 
 function bindDropdownShowOnAvatarClick() {
-	issuesContainer
-		.getElementsByClassName(config.avatars.avatarClass)
+	context.issuesContainer
+		.querySelectorAll(`.${config.avatars.avatarClass}`)
 		.forEach(element => {
 			if (element.getAttribute('listener') !== 'true') {
 				element.addEventListener('click', listenerShowDropdownOnClick, true)
@@ -178,16 +224,26 @@ function bindDropdownShowOnAvatarClick() {
 		})
 }
 
+function bindRefreshUsersListOnClick() {
+	dropdown.getElementsByClassName('usersDropdownRefresh')[0]
+		.addEventListener('click', refreshUsersList)
+}
+
 function bindHideDropdownOnClick() {
 	document.addEventListener('click', listenerHideDropdownOnClick)
 }
 
-const init = (context) => {
-	await setup (context, data)
-	await renderUsersList()
+/**
+ * 7. Init and export
+ */
+
+const init = async (providedContext) => {
+	await setup (providedContext)
+	await renderUsersList('')
 
 	bindAssignOnClick()
 	bindDropdownShowOnAvatarClick()
+	bindRefreshUsersListOnClick()
 	bindHideDropdownOnClick()
 }
 
