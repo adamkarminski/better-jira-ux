@@ -30,6 +30,12 @@ async function setup(providedContext) {
 }
 
 function setupUsersDropdown() {
+	dropdown = document.getElementById('usersDropdown')
+
+	if (dropdown !== null) {
+		return true
+	}
+
 	let virtualDropdown = document.createElement('div')
 
 	virtualDropdown.setAttribute('id', 'usersDropdown')
