@@ -2,3 +2,4 @@ node_modules
 build
 secrets.*.js
 .on-save.json
+.DS_Store
