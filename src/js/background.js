@@ -35,9 +35,11 @@ function processMessage(request, sender, sendResponse) {
 	}
 
 	let params = ('params' in request) ? request.params : null
-	let response = modules[request.module][request.action](params)
+	let response = modules[request.module][request.action](params).then((response) => {
+		sendResponse(response)
+	})
 
-	sendResponse(response)
+	return true
 }
 
 function init() {
