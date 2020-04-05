@@ -1,13 +1,15 @@
 import { local } from 'brownies'
-import { log } from './lib/logger.js'
+import { debug } from './lib/logger.js'
 
-// Import content modules
+// Import modules
 import assign from './modules/assign/assign.content'
 
 const windowOnload = () => {
-	log('content.js::windowOnload', 'Starting content')
+	debug('content.js::windowOnload', 'Starting content')
 
 	assign.init()
 }
+
+// chrome.runtime.connect({name: 'content'})
 
 window.onload = windowOnload;

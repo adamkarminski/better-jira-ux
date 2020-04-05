@@ -1,4 +1,4 @@
-import { log } from '../../../lib/logger'
+import { debug } from '../../../lib/logger'
 import { sendMessage } from '../../../lib/communication'
 
 import config from '../assign.config'
@@ -23,7 +23,7 @@ function injectUnassignedAvatarHtml(context, element) {
 }
 
 function injectUnassignedAvatars() {
-	log('unassignedAvatar::injectUnassignedAvatars', context)
+	debug('unassignedAvatar::injectUnassignedAvatars', context)
 
 	context.issuesContainer
 		.querySelectorAll(contextConfig.avatarContainerSelector)
@@ -35,11 +35,11 @@ function injectUnassignedAvatars() {
 function setup(providedContext) {
 	context = providedContext
 	contextConfig = config.avatars[context.name]
-	log('unassignedAvatar::setup', ['Setup finished', context])
+	debug('unassignedAvatar::setup', ['Setup finished', context])
 }
 
 const init = async (providedContext) => {
-	log('unassignedAvatar::init', providedContext)
+	debug('unassignedAvatar::init', providedContext)
 
 	setup(providedContext)
 	await injectUnassignedAvatars()

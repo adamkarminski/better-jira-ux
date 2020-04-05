@@ -1,7 +1,7 @@
 import { local } from 'brownies'
 
-import { log } from '../../../lib/logger'
-import { jiraUsersGetAll, jiraIssueAssignUser } from '../../../lib/jira-messages'
+import { debug } from '../../../lib/logger'
+import { jiraUsersGetAll, jiraIssueAssignUser } from '../../../lib/jira-background-api'
 import { findElementByClassName } from '../../../lib/dom'
 import config from '../assign.config'
 
@@ -74,7 +74,7 @@ async function renderUsersList(filterText) {
 	let usersList = await jiraUsersGetAll()
 	let filteredList = filterUsersList(usersList, filterText)
 
-	log('assignDropdown.js::renderUsersList', filteredList)
+	debug('assignDropdown.js::renderUsersList', filteredList)
 
 	await injectUsersList(filteredList)
 	bindAssignOnClick()
@@ -113,7 +113,7 @@ function injectUsersList(list) {
 		html += listItem
 	})
 
-	log('assignDropdown.js::injectUsersList', list)
+	debug('assignDropdown.js::injectUsersList', list)
 
 	dropdown.getElementsByClassName('usersDropdownList')[0].innerHTML = html
 }
@@ -142,7 +142,7 @@ function getUserListItemData(userListItem) {
  */
 
 function getActiveIssue(issuesContainer, issueKey) {
-	log('assignDropdown::getActiveIssue', {issuesContainer, issueKey})
+	debug('assignDropdown::getActiveIssue', {issuesContainer, issueKey})
 	return issuesContainer
 		.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
 }
@@ -193,7 +193,7 @@ function listenerHideDropdownOnClick(e) {
 }
 
 function listenerSearchUsersListOnInput(e) {
-	log('assignDropdown.js::listenerSearchUsersListOnInput', e)
+	debug('assignDropdown.js::listenerSearchUsersListOnInput', e)
 	searchUsersList(`${e.target.value}`)
 }
 

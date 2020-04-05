@@ -2,8 +2,8 @@ const config = {
 	root: 'BJU'
 }
 
-export function log (context, content) {
-	console.log({
+export function debug(context, content) {
+	console.debug({
 		...config,
 		'context': context,
 		'content': content
