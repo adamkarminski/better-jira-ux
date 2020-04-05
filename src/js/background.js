@@ -27,13 +27,15 @@ const init = () => {
 		return response.data
 	}
 
-	async function assignUser (issueKey, accountId) {
-		let path = `/issue/${issueKey}/assignee`
-		let data = { 'accountId': accountId }
+	async function assignUser (params) {
+		let path = `/issue/${params.issueKey}/assignee`
+		let data = {
+			'accountId': params.accountId.length > 0 ? params.accountId : null
+		}
 
-		jiraPutRequest(path, data).then((responseData) => {
-			alert('Done!')
-		})
+		let response = await jiraPutRequest(path, data)
+
+		return response.data
 	}
 
 	async function getUsersList () {
@@ -44,6 +46,7 @@ const init = () => {
 
 	const actionsMap = {
 		'getJiraUsers': getUsersList,
+		'assignUser': assignUser,
 	}
 
 	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -62,9 +65,10 @@ const init = () => {
 			return false;
 		}
 
-		console.log('BJU - action chosen', actionsMap[request.action])
+		let params = ('params' in request) ? request.params : null
 
-		actionsMap[request.action]().then((response) => {
+		console.log('BJU - action chosen', actionsMap[request.action])
+		actionsMap[request.action](params).then((response) => {
 			console.log('BJU - Sending response', response)
 			sendResponse(response)
 		})

@@ -1,18 +1,58 @@
 import { local } from 'brownies'
 
 let init = () => {
-	// TODO: Load it when the UI is ready
-	let avatarHtml = '<img src="https://wnl-platform-production-storage.s3.eu-central-1.amazonaws.com/public/unassigned.png" class="ghx-avatar-img" data-tooltip="Unassigned">'
+	// TODO: Move it to a function
+	let unassignedAvatarURL = 'https://wnl-platform-production-storage.s3.eu-central-1.amazonaws.com/public/unassigned.png'
+	let backlog = document.getElementById('ghx-backlog')
+	let board = document.getElementById('ghx-pool')
+	let issuesContainer, avatarContainer, unassignedAvatarHTML, avatarContainerSelector
 
-	let issuesEndAreas = document.querySelectorAll('span.ghx-end')
+	if (backlog !== null) {
+		console.log('BJU - It is a backlog')
+		issuesContainer = backlog
+		avatarContainerSelector = 'span.ghx-end'
+		unassignedAvatarHTML = `
+			<img src="${unassignedAvatarURL}" class="ghx-avatar-img" data-tooltip="Unassigned">
+		`
+	} else if (board !== null) {
+		console.log('BJU - It is a board')
+		issuesContainer = board
+		avatarContainerSelector = 'div.ghx-stat-2'
+		unassignedAvatarHTML = `
+			<span class="ghx-field">
+				<img src="${unassignedAvatarURL}" class="ghx-avatar-img" data-tooltip="Unassigned">
+			</span>
+		`
+	} else {
+		console.log('BJU - Not a project page')
+		return false;
+	}
 
-	console.log('BJU' + avatarHtml)
 
-	issuesEndAreas.forEach(e => {
+	let issuesAvatarContainers = issuesContainer.querySelectorAll(
+		avatarContainerSelector
+	)
+
+	issuesAvatarContainers.forEach(e => {
 		if (e.innerHTML.indexOf('ghx-avatar-img') === -1) {
-			e.innerHTML = avatarHtml + e.innerHTML
+			e.innerHTML = unassignedAvatarHTML + e.innerHTML
 		}
 	})
+
+	function findElementByClassName(elementsList, className) {
+		console.log('BJU - findElementByClassName')
+		console.log(className)
+		console.log(elementsList)
+
+		for (let i = 0; i < elementsList.length; i++) {
+			console.log(elementsList[i].className)
+			if (elementsList[i].className.indexOf(className) > -1) {
+				return elementsList[i]
+			}
+		}
+
+		return false;
+	}
 
 	function sendMessage(params) {
 		return new Promise((resolve, reject) => {
@@ -42,12 +82,12 @@ let init = () => {
 		return local.jiraUsers
 	}
 
-	async function assignUser(issueId, accountId) {
+	async function assignUser(issueKey, accountId) {
 		chrome.runtime.sendMessage(
 			{
 				"action": "assignUser",
-				"values": {
-					"issueId": issueId,
+				"params": {
+					"issueKey": issueKey,
 					"accountId": accountId,
 				},
 			}
@@ -56,31 +96,84 @@ let init = () => {
 
 	async function createUsersDropdown() {
 		console.log('BJU - createUsersDropdown')
+		let node = document.createElement('div')
 		let html = ''
 		let usersList = await getJiraUsers()
+		let activeUsers = usersList.filter(
+			user => user.accountType === 'atlassian' && user.active
+		)
 
-		usersList.forEach(user => {
+		activeUsers.unshift({
+			'accountId': '',
+			'avatarUrls': {
+				'32x32': unassignedAvatarURL
+			},
+			'displayName': 'Unassigned',
+		})
+
+		activeUsers.forEach(user => {
 			let listItem = `
-				<li>
-					<a href="" data-accountId="${user.accountId}">
-						${user.displayName}
-					</a>
-				</li>
+				<div class="usersDropdownItem" data-accountId="${user.accountId}">
+					<img class="usersDropdownImage" src="${user.avatarUrls['32x32']}">
+					<span class="usersDropdownText">${user.displayName}</span>
+				</div>
 			`
 			html += listItem
 		})
 
-		html = `
+		node.innerHTML = `
 			<div id="usersDropdown" class="usersDropdown" data-issueKey="">
-				<ul>
-					${html}ą
-				</ul>
+				${html}
 			</div>
 		`
 
-		console.log('BSU - Users dropdown', html)
+		document.getElementsByTagName('body')[0].appendChild(node)
 
-		document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', html)
+		document.querySelectorAll('.usersDropdownItem').forEach((element) => {
+			element.addEventListener('click', (e) => {
+				console.log(e)
+				console.log(e.path)
+
+				let itemElement = findElementByClassName(e.path, 'usersDropdownItem')
+				if (itemElement === false) {
+					console.log('No element found')
+					return
+				}
+
+				console.log(itemElement)
+
+				let dropdown = itemElement.parentElement
+				let image = itemElement.getElementsByClassName('usersDropdownImage')[0]
+				let accountId = itemElement.getAttribute('data-accountId')
+				let issueKey = dropdown.getAttribute('data-issueKey')
+
+				console.log({
+					'accountId': accountId,
+					'issueKey': issueKey,
+				})
+
+				assignUser(issueKey, accountId).then((response) => {
+					let activeIssue = issuesContainer
+						.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
+					let activeIssueAvatar = activeIssue.getElementsByClassName('ghx-avatar-img')[0]
+
+					document.getElementById('usersDropdown').setAttribute(
+						'style', 'display: none;'
+					)
+
+					activeIssueAvatar.setAttribute('style', '')
+					activeIssueAvatar.setAttribute('src', image.getAttribute('src'))
+				})
+			})
+		})
+
+		document.addEventListener('click', (e) => {
+			if (e.target.className.indexOf('usersDropdown') === -1) {
+				document.getElementById('usersDropdown').setAttribute(
+					'style', 'display: none;'
+				)
+			}
+		})
 
 		return
 	}
@@ -98,8 +191,6 @@ let init = () => {
 						let parent = e.target.parentElement
 						let issueKey = parent.getElementsByClassName('ghx-key')[0].innerText
 						let dropdown = document.getElementById('usersDropdown')
-
-						console.log(`BJU - Bind assign ${issueKey}`)
 
 						dropdown.setAttribute('data-issueKey', issueKey)
 						dropdown.setAttribute('style',
