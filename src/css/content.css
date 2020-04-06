@@ -1,4 +1,5 @@
-.ghx-issue img.ghx-avatar-img {
+.ghx-issue img.ghx-avatar-img,
+img.ghx-avatar-img {
 	cursor: pointer;
 }
 

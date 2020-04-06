@@ -1,7 +1,7 @@
 import { local } from 'brownies'
 
 import { debug } from '../../../lib/logger'
-import { jiraUsersGetAll, jiraIssueAssignUser } from '../../../lib/jira-background-api'
+import { usersGetAll, issueAssignUser } from '../../../lib/jira-background-api'
 import { findElementByClassName } from '../../../lib/dom'
 import config from '../assign.config'
 
@@ -77,7 +77,7 @@ function setupUsersDropdown() {
   */
 
 async function renderUsersList(filterText) {
-	let usersList = await jiraUsersGetAll()
+	let usersList = await usersGetAll()
 	let filteredList = filterUsersList(usersList, filterText)
 
 	debug('assignDropdown.js::renderUsersList', filteredList)
@@ -218,7 +218,7 @@ async function listenerAssignUserOnClick(e) {
 	let accountId = userListItem.getAttribute('data-accountId')
 
 	activeIssueAvatarLoading(context.issuesContainer, issueKey)
-	response = await jiraIssueAssignUser(issueKey, accountId)
+	response = await issueAssignUser(issueKey, accountId)
 
 	let newUser = getUserListItemData(userListItem)
 	activeIssueAvatarSet(

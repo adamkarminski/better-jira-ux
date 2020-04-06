@@ -20,7 +20,7 @@ async function jiraPutRequest(path, data) {
 	return response.data
 }
 
-export async function jiraAssignUser(issueKey, accountId) {
+export async function jiraIssueAssignUser(issueKey, accountId) {
 	let path = `/issue/${issueKey}/assignee`
 	let data = {
 		'accountId': accountId
@@ -31,7 +31,7 @@ export async function jiraAssignUser(issueKey, accountId) {
 	return response.data
 }
 
-export async function jiraGetUsersList(params = {}) {
+export async function jiraUsersGetAll(params = {}) {
 	let response = await jiraGetRequest('/users/search', params)
 
 	return response
