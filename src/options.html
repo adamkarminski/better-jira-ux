@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	  <meta charset="UTF-8">
-	  <title></title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+		<title>Better Jira UX - Options</title>
 	</head>
 	<body>
-		<div>
-			<p id="status"></p>
-		</div>
+		<div class="hero is-fullheight">
+			<div class="hero-body">
+				<div class="container">
+					<div class="columns is-centered">
+						<div class="column is-two-thirds-tablet is-half-widescreen">
+							<h1 class="title has-text-centered">Setup your way to a Better Jira UX</h1>
+							<form>
+								<div class="field">
+									<label class="label">
+										URL adress of your Jira's
+									</label>
+									<p class="control">
+										<input class="input" type="text" id="jira-api-base-url">
+									</p>
+									<p class="help">E.g. https://company.atlassian.net</p>
+								</div>
 
-		<div>
-			<label>
-				Your Jira's URL, e.g. https://company.atlassian.net
-				<input type="text" id="jira-api-base-url">
-			</label>
-		</div>
+								<div class="field">
+									<label class="label">
+										Your API token
+									</label>
+									<p class="control">
+										<input class="input" type="text" id="jira-api-token">
+									</p>
+									<p class="help">
+										You can
+										<a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="-_blank">
+											create an API token here.
+										</a> You can name it as you like, e.g. <em>Better Jira UX</em>.
+									</p>
+								</div>
 
-		<div>
-			<label>
-				Your API token
-				<input type="text" id="jira-api-token">
-			</label>
+								<div class="field has-text-centered">
+									<a class="button is-link" id="submit">Save</a>
+									<p class="help is-success" id="status">&nbsp;</p>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<p>
-			<a href="#" id="submit">Submit</a>
-		</p>
 
 		<script src="options.js"></script>
 	</body>

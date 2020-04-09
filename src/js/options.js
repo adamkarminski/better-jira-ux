@@ -10,7 +10,7 @@ const getOptions = () => {
 		apiToken: ''
 	}, (options) => {
 		baseUrl.value = options.baseUrl
-		apiToken.value = options.baseUrl
+		apiToken.value = options.apiToken
 	})
 }
 
@@ -19,11 +19,11 @@ const optionsSave = () => {
 		baseUrl: baseUrl.value,
 		apiToken: apiToken.value
 	}, () => {
-		status.textContent = 'Success!'
+		status.textContent = 'Saved successfully!'
 
 		setTimeout(() => {
-			status.textContent = ''
-		}, 750)
+			status.innerHTML = '&nbsp;'
+		}, 1500)
 	})
 }
 
