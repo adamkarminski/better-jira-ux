@@ -14,9 +14,8 @@ let dropdown
  * 2. Dropdown behavior
  * 3. User list behavior
  * 4. Issues list behavior
- * 5. Listeners
- * 6. Binders
- * 7. Init and export
+ * 5. Listeners and binders
+ * 6. Init and export
  */
 
 /**
@@ -173,8 +172,10 @@ function activeIssueAvatarSet(issuesContainer, issueKey, imageSource, tooltip) {
 }
 
 /**
- * 5. Listeners
+ * 5. Binders and listeners
  */
+
+// Show dropdown on click
 
 function listenerShowDropdownOnClick(e) {
 	e.preventDefault()
@@ -192,20 +193,66 @@ function listenerShowDropdownOnClick(e) {
 	showDropdown(issueKey, leftPosition, topPosition)
 }
 
+function bindShowDropdownOnAvatarClick() {
+	context.issuesContainer
+		.querySelectorAll(`.${config.avatars.avatarClass}`)
+		.forEach(element => {
+			if (element.getAttribute('listener') !== 'true') {
+				element.addEventListener('click', listenerShowDropdownOnClick, true)
+				element.setAttribute('listener', 'true')
+			}
+		})
+}
+
+// Hide dropdown on click
+
 function listenerHideDropdownOnClick(e) {
 	if (e.target.className.indexOf('usersDropdown') === -1) {
 		hideDropdown()
 	}
 }
 
+function bindHideDropdownOnClick() {
+	document.addEventListener('click', listenerHideDropdownOnClick)
+}
+
+// Hide dropdown on Esc
+
+function listenerHideDropdownOnEsc(e) {
+	if (e.key === 'Escape') {
+		hideDropdown()
+	}
+}
+
+function bindHideDropdownOnEsc() {
+	dropdown.getElementsByClassName('usersDropdownSearch')[0]
+		.addEventListener('keydown', listenerHideDropdownOnEsc)
+}
+
+// Search users list on input
+
 function listenerSearchUsersListOnInput(e) {
 	debug('assignDropdown.js::listenerSearchUsersListOnInput', e)
 	searchUsersList(`${e.target.value}`)
 }
 
+function bindSearchUsersListOnInput() {
+	dropdown.getElementsByClassName('usersDropdownSearch')[0]
+		.addEventListener('input', listenerSearchUsersListOnInput)
+}
+
+// Refresh users list on click
+
 function listenerRefreshUsersListOnClick(e) {
 	refreshUsersList()
 }
+
+function bindRefreshUsersListOnClick() {
+	dropdown.getElementsByClassName('usersDropdownRefresh')[0]
+		.addEventListener('click', listenerRefreshUsersListOnClick)
+}
+
+// Assign a user on click
 
 async function listenerAssignUserOnClick(e) {
 	let userListItem = findElementByClassName(e.path, 'usersDropdownItem')
@@ -228,53 +275,25 @@ async function listenerAssignUserOnClick(e) {
 	hideDropdown()
 }
 
-/**
- * 6. Binders
- */
-
 function bindAssignOnClick () {
 	dropdown.querySelectorAll('.usersDropdownItem').forEach(element => {
 		element.addEventListener('click', listenerAssignUserOnClick)
 	})
 }
 
-function bindDropdownShowOnAvatarClick() {
-	context.issuesContainer
-		.querySelectorAll(`.${config.avatars.avatarClass}`)
-		.forEach(element => {
-			if (element.getAttribute('listener') !== 'true') {
-				element.addEventListener('click', listenerShowDropdownOnClick, true)
-				element.setAttribute('listener', 'true')
-			}
-		})
-}
-
-function bindSearchUsersListOnInput() {
-	dropdown.getElementsByClassName('usersDropdownSearch')[0]
-		.addEventListener('input', listenerSearchUsersListOnInput)
-}
-
-function bindRefreshUsersListOnClick() {
-	dropdown.getElementsByClassName('usersDropdownRefresh')[0]
-		.addEventListener('click', listenerRefreshUsersListOnClick)
-}
-
-function bindHideDropdownOnClick() {
-	document.addEventListener('click', listenerHideDropdownOnClick)
-}
-
 /**
- * 7. Init and export
+ * 6. Init and export
  */
 
 const init = async (providedContext) => {
 	await setup (providedContext)
 	await renderUsersList('')
 
-	bindDropdownShowOnAvatarClick()
+	bindShowDropdownOnAvatarClick()
 	bindSearchUsersListOnInput()
 	bindRefreshUsersListOnClick()
 	bindHideDropdownOnClick()
+	bindHideDropdownOnEsc()
 }
 
 export default {
