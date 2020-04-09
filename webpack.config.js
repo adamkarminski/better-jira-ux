@@ -49,6 +49,9 @@ var options = {
       }
     ]
   },
+  optimization: {
+	minimize: process.env.NODE_ENV !== "development"
+  },
   resolve: {
     alias: alias
   },

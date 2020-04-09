@@ -1,18 +1,18 @@
-import { jiraUsersGetAll, jiraIssueAssignUser } from '../../lib/jira-public-api'
+import { jiraUsersGetAll, jiraIssueAssignUser } from '../../lib/jira-web-api'
 
-const issueAssignUser = async (params) => {
-	let accountId = params.accountId.length > 0 ? params.accountId : null
-	let response = await jiraIssueAssignUser(params.issueKey, accountId)
+const usersGetAll = async () => {
+	const params = {
+		maxResults: 150
+	}
+
+	let response = await jiraUsersGetAll(params)
 
 	return response
 }
 
-const usersGetAll = async () => {
-	let params = {
-		maxResults: 150,
-	}
-
-	let response = await jiraUsersGetAll('/users/search', params)
+const issueAssignUser = async (params) => {
+	let accountId = params.accountId.length > 0 ? params.accountId : null
+	let response = await jiraIssueAssignUser(params.issueKey, accountId)
 
 	return response
 }

@@ -1,9 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
-</body>
+	<head>
+	  <meta charset="UTF-8">
+	  <title></title>
+	</head>
+	<body>
+		<div>
+			<p id="status"></p>
+		</div>
+
+		<div>
+			<label>
+				Your Jira's URL, e.g. https://company.atlassian.net
+				<input type="text" id="jira-api-base-url">
+			</label>
+		</div>
+
+		<div>
+			<label>
+				Your API token
+				<input type="text" id="jira-api-token">
+			</label>
+		</div>
+
+		<p>
+			<a href="#" id="submit">Submit</a>
+		</p>
+
+		<script src="options.js"></script>
+	</body>
 </html>
