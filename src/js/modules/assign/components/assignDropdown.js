@@ -1,11 +1,14 @@
-import { local } from 'brownies'
+import { isElement } from 'lodash'
 
 import { debug } from '../../../lib/logger'
-import { usersGetAll, issueAssignUser } from '../../../lib/jira-background-api'
 import { findElementByClassName } from '../../../lib/dom'
-import config from '../assign.config'
+import { usersGetAll, issueAssignUser } from '../../../lib/jira-background-api'
 
-let context
+import config from '../../../jira/jira.config'
+import { getAllAvatars } from '../../../jira/components/IssuesList'
+import { getIssue } from '../../../jira/components/Issue'
+import { setIssueAvatarToLoading, setIssueAvatar } from '../../../jira/components/issue/Avatar'
+
 let dropdown
 
 /**
@@ -13,9 +16,8 @@ let dropdown
  * 1. Setup
  * 2. Dropdown behavior
  * 3. User list behavior
- * 4. Issues list behavior
- * 5. Listeners and binders
- * 6. Init and export
+ * 4. Listeners and binders
+ * 5. Init and export
  */
 
 /**
@@ -23,15 +25,13 @@ let dropdown
  */
 
 async function setup(providedContext) {
-	context = providedContext
-
 	await setupUsersDropdown()
 }
 
 function setupUsersDropdown() {
 	dropdown = document.getElementById('usersDropdown')
 
-	if (dropdown !== null) {
+	if (isElement(dropdown)) {
 		return true
 	}
 
@@ -89,13 +89,6 @@ async function searchUsersList(searchText) {
 	renderUsersList(searchText)
 }
 
-function refreshUsersList() {
-	// TODO: Move cache handling to the component
-	delete local.jiraUsers
-
-	renderUsersList('')
-}
-
 function injectUsersList(list) {
 	let html = ''
 	let listItem
@@ -103,7 +96,7 @@ function injectUsersList(list) {
 	list.unshift({
 		'accountId': '',
 		'avatarUrls': {
-			'32x32': config.avatars.unassignedUrl
+			'32x32': config.avatar.unassigned.url
 		},
 		'displayName': 'Unassigned',
 	})
@@ -143,36 +136,7 @@ function getUserListItemData(userListItem) {
 }
 
 /**
- * 4. Issues list behavior
- */
-
-function getActiveIssue(issuesContainer, issueKey) {
-	debug('assignDropdown::getActiveIssue', {issuesContainer, issueKey})
-	return issuesContainer
-		.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
-}
-
-function getActiveIssueAvatar(issuesContainer, issueKey) {
-	return getActiveIssue(issuesContainer, issueKey)
-		.getElementsByClassName(config.avatars.avatarClass)[0]
-}
-
-function activeIssueAvatarLoading(issuesContainer, issueKey) {
-	let avatar = getActiveIssueAvatar(issuesContainer, issueKey)
-
-	avatar.setAttribute('style', 'opacity: 50%;')
-}
-
-function activeIssueAvatarSet(issuesContainer, issueKey, imageSource, tooltip) {
-	let avatar = getActiveIssueAvatar(issuesContainer, issueKey)
-
-	avatar.setAttribute('style', '')
-	avatar.setAttribute('src', imageSource)
-	avatar.setAttribute('data-tooltip', tooltip)
-}
-
-/**
- * 5. Binders and listeners
+ * 4. Binders and listeners
  */
 
 // Show dropdown on click
@@ -194,14 +158,13 @@ function listenerShowDropdownOnClick(e) {
 }
 
 function bindShowDropdownOnAvatarClick() {
-	context.issuesContainer
-		.querySelectorAll(`.${config.avatars.avatarClass}`)
-		.forEach(element => {
-			if (element.getAttribute('listener') !== 'true') {
-				element.addEventListener('click', listenerShowDropdownOnClick, true)
-				element.setAttribute('listener', 'true')
-			}
-		})
+	getAllAvatars().forEach(element => {
+		if (element.getAttribute('listener') !== 'true') {
+			element.addEventListener('click', listenerShowDropdownOnClick, true)
+			element.setAttribute('listener', 'true')
+		}
+	})
+
 }
 
 // Hide dropdown on click
@@ -233,23 +196,13 @@ function bindHideDropdownOnEsc() {
 
 function listenerSearchUsersListOnInput(e) {
 	debug('assignDropdown.js::listenerSearchUsersListOnInput', e)
+
 	searchUsersList(`${e.target.value}`)
 }
 
 function bindSearchUsersListOnInput() {
 	dropdown.getElementsByClassName('usersDropdownSearch')[0]
 		.addEventListener('input', listenerSearchUsersListOnInput)
-}
-
-// Refresh users list on click
-
-function listenerRefreshUsersListOnClick(e) {
-	refreshUsersList()
-}
-
-function bindRefreshUsersListOnClick() {
-	dropdown.getElementsByClassName('usersDropdownRefresh')[0]
-		.addEventListener('click', listenerRefreshUsersListOnClick)
 }
 
 // Assign a user on click
@@ -263,14 +216,13 @@ async function listenerAssignUserOnClick(e) {
 	let response
 	let issueKey = dropdown.getAttribute('data-issue-key')
 	let accountId = userListItem.getAttribute('data-accountId')
+	let issue = getIssue(issueKey)
 
-	activeIssueAvatarLoading(context.issuesContainer, issueKey)
+	setIssueAvatarToLoading(issue)
 	response = await issueAssignUser(issueKey, accountId)
 
 	let newUser = getUserListItemData(userListItem)
-	activeIssueAvatarSet(
-		context.issuesContainer, issueKey, newUser.avatar.src, newUser.displayName
-	)
+	setIssueAvatar(issue, newUser.avatar.src, newUser.displayName)
 
 	hideDropdown()
 }
@@ -282,16 +234,15 @@ function bindAssignOnClick () {
 }
 
 /**
- * 6. Init and export
+ * 5. Init and export
  */
 
-const init = async (providedContext) => {
-	await setup (providedContext)
+const init = async () => {
+	await setup ()
 	await renderUsersList('')
 
 	bindShowDropdownOnAvatarClick()
 	bindSearchUsersListOnInput()
-	bindRefreshUsersListOnClick()
 	bindHideDropdownOnClick()
 	bindHideDropdownOnEsc()
 }

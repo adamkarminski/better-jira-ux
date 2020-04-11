@@ -1,47 +1,45 @@
 import { debug } from '../../../lib/logger'
-import { sendMessage } from '../../../lib/communication'
 
-import config from '../assign.config'
+import config from '../../../jira/jira.config'
 
-let context
-let contextConfig
+import { getCurrentPageType } from '../../../jira/components/Page'
+import { getAllAvatarContainers } from '../../../jira/components/IssuesList'
+
+/**
+ * Constants
+ */
+
+const pageType = getCurrentPageType()
+
+const unassignedAvatarImg = `<img src="${config.avatar.unassigned.url}"
+	class="${config.avatar.className}" data-tooltip="${config.avatar.unassigned.name}">`
+
 const unassignedAvatarHtml = {
-	'backlog': `
-		<img src="${config.avatars.unassignedUrl}" class="ghx-avatar-img" data-tooltip="Unassigned">
-	`,
-	'board': `
-		<span class="ghx-field">
-			<img src="${config.avatars.unassignedUrl}" class="ghx-avatar-img" data-tooltip="Unassigned">
-		</span>
-	`
+	'backlog': unassignedAvatarImg,
+	'board': `<span class="ghx-field">${unassignedAvatarImg}</span>`
 }
 
-function injectUnassignedAvatarHtml(context, element) {
-	if (element.innerHTML.indexOf(config.avatars.avatarClass) === -1) {
-		element.innerHTML = unassignedAvatarHtml[context.name] + element.innerHTML
+/**
+ * Functions
+ */
+
+function injectUnassignedAvatarHtml(element) {
+	if (element.innerHTML.indexOf(config.avatar.className) === -1) {
+		element.innerHTML = unassignedAvatarHtml[pageType] + element.innerHTML
 	}
 }
 
 function injectUnassignedAvatars() {
-	debug('unassignedAvatar::injectUnassignedAvatars', context)
+	let avatarContainers = getAllAvatarContainers()
 
-	context.issuesContainer
-		.querySelectorAll(contextConfig.avatarContainerSelector)
-		.forEach(element => {
-			injectUnassignedAvatarHtml(context, element)
-		})
+	debug('unassignedAvatar::injectUnassignedAvatars::avatarContainers', avatarContainers)
+
+	avatarContainers.forEach(element => {
+		injectUnassignedAvatarHtml(element)
+	})
 }
 
-function setup(providedContext) {
-	context = providedContext
-	contextConfig = config.avatars[context.name]
-	debug('unassignedAvatar::setup', ['Setup finished', context])
-}
-
-const init = async (providedContext) => {
-	debug('unassignedAvatar::init', providedContext)
-
-	setup(providedContext)
+const init = async () => {
 	await injectUnassignedAvatars()
 }
 

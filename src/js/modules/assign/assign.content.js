@@ -1,40 +1,24 @@
 import { debug } from '../../lib/logger'
 
+import { getCurrentPageType } from '../../jira/components/Page'
+
 import unassignedAvatar from './components/unassignedAvatar'
+import unassignShortcut from './components/unassignShortcut'
 import assignDropdown from './components/assignDropdown'
-
-import config from './assign.config'
-
-function checkContext() {
- 	if (window.location.href.indexOf('planning') > -1) {
- 		return 'backlog'
- 	}
- 	else if (window.location.href.indexOf('RapidBoard') > -1) {
- 		return 'board'
- 	}
- 	else if (window.location.href.indexOf('browse') > -1) {
- 		return 'issue'
- 	}
-
- 	return false
-}
 
 const init = async () => {
 	debug('assign::init', 'Initiating assign module.')
 
-	let context = checkContext()
-	if (context === false) {
-		debug('assign::init', 'Assigned does not work in this context. Init aborted.')
+	const supportedPages = ['backlog', 'board']
+	if (supportedPages.indexOf(getCurrentPageType()) === -1) {
 		return false
 	}
 
-	let contextConfig = { ...config.context[context] }
-	contextConfig.issuesContainer = document.getElementById(config.avatars[context].id)
+	debug('assign::init', 'Loading components.')
 
-	debug('assign::init', 'Finished setup, load modules.')
-
-	await unassignedAvatar.init(contextConfig)
-	assignDropdown.init(contextConfig)
+	await unassignedAvatar.init()
+	assignDropdown.init()
+	unassignShortcut.init()
 }
 
 export default {
