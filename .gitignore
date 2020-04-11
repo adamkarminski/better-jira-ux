@@ -1,5 +1,6 @@
 node_modules
 build
+*.zip
 secrets.*.js
 .on-save.json
 .DS_Store
