@@ -6,6 +6,12 @@
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
 		<title>Better Jira UX - Options</title>
+
+		<style type="text/css">
+			.field {
+				margin-top: 30px;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="hero is-fullheight">
@@ -17,7 +23,7 @@
 							<form>
 								<div class="field">
 									<label class="label">
-										Your Jira's URL adress
+										🌍 Your Jira's URL adress
 									</label>
 									<p class="control">
 										<input class="input" type="text" id="jira-api-base-url">
@@ -27,7 +33,7 @@
 
 								<div class="field">
 									<label class="label">
-										Your API token
+										🔒 Your API token
 									</label>
 									<p class="control">
 										<input class="input" type="text" id="jira-api-token">
@@ -37,6 +43,19 @@
 										<a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="-_blank">
 											<strong>create an API token here.</strong>
 										</a> You can name it as you like, e.g. <em>Better Jira UX</em>.
+									</p>
+								</div>
+
+								<div class="field">
+									<label class="label">
+										👤 Total number of users in your system (optional)
+									</label>
+									<p class="control">
+										<input class="input" type="number" id="jira-users-max-results">
+									</p>
+									<p class="help">
+										Default is 150, but it includes installed apps etc. If you don't see some of your
+										users in the assign dropdown - try to increase the number.
 									</p>
 								</div>
 

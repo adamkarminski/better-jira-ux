@@ -2,9 +2,14 @@ import axios from 'axios'
 
 import { debug } from './logger'
 
+let usersMaxResults
 let jiraApi
 
-chrome.storage.sync.get(['baseUrl', 'apiToken'], (options) => {
+chrome.storage.sync.get(['baseUrl', 'apiToken', 'usersMaxResults'], (options) => {
+	debug('jira-web-api::getOptions', options)
+
+	usersMaxResults = options.usersMaxResults !== 0 ? options.usersMaxResults : 150
+
 	jiraApi = axios.create({
 		'baseURL': `${options.baseUrl.replace(/\/$/, "")}/rest/api/latest`,
 		'headers': {
@@ -41,10 +46,8 @@ export async function jiraIssueAssignUser(issueKey, accountId) {
 	return response.data
 }
 
-export async function jiraUsersGetAll(params = {}) {
-	debug('jira-web-api::jiraUsersGetAll::params', params)
-
-	let response = await jiraGetRequest('/users/search', params)
+export async function jiraUsersGetAll() {
+	let response = await jiraGetRequest('/users/search', { maxResults: usersMaxResults })
 
 	return response
 }

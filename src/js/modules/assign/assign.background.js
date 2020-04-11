@@ -1,11 +1,7 @@
 import { jiraUsersGetAll, jiraIssueAssignUser } from '../../lib/jira-web-api'
 
 const usersGetAll = async () => {
-	const params = {
-		maxResults: 150
-	}
-
-	let response = await jiraUsersGetAll(params)
+	let response = await jiraUsersGetAll()
 
 	return response
 }
