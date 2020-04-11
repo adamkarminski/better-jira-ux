@@ -38,15 +38,6 @@ img.ghx-avatar-img {
 	width: 100%;
 }
 
-.usersDropdownRefresh {
-	align-items: center;
-	cursor: pointer;
-	display: flex;
-	font-size: 20px;
-	justify-content: center;
-	margin-left: 10px;
-}
-
 .usersDropdownItem {
 	align-items: center;
 	border-bottom: 1px solid #fafafa;

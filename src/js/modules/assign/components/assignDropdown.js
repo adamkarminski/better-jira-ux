@@ -44,7 +44,6 @@ function setupUsersDropdown() {
 	virtualDropdown.innerHTML = `
 		<div class="usersDropdownControls">
 			<input type="text" class="usersDropdownSearch" placeholder="Type to filter...">
-			<span class="usersDropdownRefresh">♻️</span>
 		</div>
 		<div id="usersDropdownList" class="usersDropdownList">
 		</div>
