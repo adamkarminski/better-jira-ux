@@ -4,7 +4,7 @@ This extension brings long-needed UX improvements to Jira.
 
 ## Features
 - Assign a user to an issue without opening it (such a time saver!).
-- Uassign an issue with the "U" key.
+- Unassign an issue with the "U" key.
 
 ## Coming soon
 _See: [Project page](https://github.com/adamkarminski/better-jira-ux/projects)_
