@@ -3,10 +3,9 @@
 	"name": "Better Jira UX",
 	"version": "1.0",
 	"author": "Adam Karmiński - https://github.com/adamkarminski",
-	"description": "The extension that brings long needed UX fixes to Jira. Unassign issue with one click,
-	assign an issue without opening it are here, more to come!",
+	"description": "The extension that brings long needed UX fixes to Jira. Unassign issue with one click, assign an issue without opening it are here, more to come!",
 	"icons": {
-		"34": "icon-34.png"
+		"34": "icon-34.png",
 		"128": "icon-128.png"
 	},
 	"default_locale": "en",
