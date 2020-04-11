@@ -1,29 +1,35 @@
 {
-  "name": "better-jira-ux",
-  "options_page": "options.html",
-  "background": {
-    "page": "background.html"
-  },
-  "content_scripts": [
-	{
-	  "matches": ["*://bethink.atlassian.net/*"],
-	  "js": ["content.bundle.js"],
-	  "css": ["content.css"]
-    }
-  ],
-  "browser_action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
-  },
-  "icons": {
-    "128": "icon-128.png"
-  },
-  "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "permissions": [
-	  "storage"
-  ],
-  "web_accessible_resources": [
-	  "unassigned.png"
-  ]
+	"manifest_version": 2,
+	"name": "Better Jira UX",
+	"version": "1.0",
+	"author": "Adam Karmiński - https://github.com/adamkarminski",
+	"description": "The extension that brings long needed UX fixes to Jira. Unassign issue with one click,
+	assign an issue without opening it are here, more to come!",
+	"icons": {
+		"34": "icon-34.png"
+		"128": "icon-128.png"
+	},
+	"default_locale": "en",
+
+	"browser_action": {
+		"default_popup": "popup.html",
+		"default_icon": "icon-34.png"
+	},
+
+	"background": {
+		"page": "background.html"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://bethink.atlassian.net/*"],
+			"js": ["content.bundle.js"],
+			"css": ["content.css"]
+		}
+	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+	"options_page": "options.html",
+	"permissions": ["storage", "tabs"],
+	"web_accessible_resources": [
+		"unassigned.png"
+	]
 }
