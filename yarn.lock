@@ -556,11 +556,6 @@ brorand@^1.0.1:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
 
-brownies@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/brownies/-/brownies-3.0.0.tgz#ec3952ae51077281743ea70f1cef37c59a023ba5"
-  integrity sha512-kVyGuOrr6LMspa+Mcb9RED6d33oZzJZ6ys020hxnYgoj4MCLz9mTbpL5m1tAjk+jhK3vQ1h+ftd93z6miG+AXw==
-
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/browserify-aes/-/browserify-aes-1.2.0.tgz#326734642f403dabc3003209853bb70ad428ef48"
@@ -765,11 +760,6 @@ chownr@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.1.tgz#54726b8b8fff4df053c42187e801fb4412df1494"
   integrity sha512-j38EvO5+LHX84jlo6h4UzmOwi0UgW61WRyPtJz4qaadK5eY3BTS5TY/S1Stc3Uk2lIM6TPevAlULiEJwie860g==
-
-chrome-extension-async@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/chrome-extension-async/-/chrome-extension-async-3.4.1.tgz#bac9b1924e85c0968ed19b4d56ec98cddaf42567"
-  integrity sha512-YBkFGFL+8MpkHvZ4nB/NU0uPkJU4LWjSlqxgXOwHcBe5sGs/YT0etEkmQXay3Op6p2c+34zf1k4Osi0ma4HtiQ==
 
 chrome-trace-event@^1.0.2:
   version "1.0.2"
@@ -2603,7 +2593,7 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.3, lodash@^4.17.4:
+lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.17.4:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==

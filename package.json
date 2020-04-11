@@ -1,7 +1,7 @@
 {
   "name": "better-jira-ux",
-  "version": "0.0.1",
-  "description": "Chrome extension that adds some long-needed UX changes.",
+  "version": "1.0",
+  "description": "Chrome extension that adds some long-needed UX changes to Jira.",
   "scripts": {
     "build": "node utils/build.js",
     "start": "node utils/webserver.js"
@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "brownies": "^3.0.0",
-    "chrome-extension-async": "^3.4.1"
+    "lodash": "^4.17.15"
   }
 }

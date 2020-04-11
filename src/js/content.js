@@ -1,4 +1,3 @@
-import { local } from 'brownies'
 import { debug } from './lib/logger.js'
 
 // Import modules

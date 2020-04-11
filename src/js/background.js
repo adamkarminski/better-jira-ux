@@ -2,7 +2,6 @@ import '../img/icon-128.png'
 import '../img/icon-34.png'
 
 import axios from 'axios'
-import { local } from 'brownies'
 
 import { debug } from './lib/logger'
 
