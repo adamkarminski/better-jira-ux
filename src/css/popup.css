@@ -1,0 +1,36 @@
+a,
+a:visited,
+a:hover {
+	color: #4D62FF;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+a:hover {
+	color: #03BCFF;
+}
+
+.header {
+	align-items: center;
+	display: flex;
+}
+
+.header h1 {
+	display: inline;
+}
+
+.header img {
+	height: 30px;
+	margin-right: 10px;
+	width: 30px;
+}
+
+.container {
+	padding: 10px 20px;
+	width: 320px;
+}
+
+.credits {
+	font-size: 80%;
+	margin-top: 30px;
+}
