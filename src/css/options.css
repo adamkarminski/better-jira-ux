@@ -1,0 +1,7 @@
+#submit {
+	cursor: default;
+}
+
+#submit[data-submitable="true"] {
+	cursor: pointer;
+}

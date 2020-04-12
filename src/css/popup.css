@@ -1,13 +1,18 @@
 a,
 a:visited,
 a:hover {
-	color: #4D62FF;
+	color: #357fff;
 	text-decoration: none;
 	transition: 0.3s;
 }
 
 a:hover {
-	color: #03BCFF;
+	color: #03bcff;
+}
+
+.container {
+	padding: 10px 20px;
+	width: 340px;
 }
 
 .header {
@@ -25,9 +30,8 @@ a:hover {
 	width: 30px;
 }
 
-.container {
-	padding: 10px 20px;
-	width: 320px;
+#open-options-link {
+	font-size: 150%;
 }
 
 .credits {

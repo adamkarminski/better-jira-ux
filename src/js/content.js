@@ -1,3 +1,4 @@
+import { requiredOptions, areRequiredOptionsSet, doesLocationHrefMatchBaseUrl } from './config'
 import { debug } from './lib/logger.js'
 
 // Import modules
@@ -18,12 +19,19 @@ const loaderElement = document.getElementsByClassName('adg-throbber')[0]
 const windowOnload = () => {
 	debug('content.js::windowOnload', 'Starting content')
 
-	assign.init()
+	chrome.storage.sync.get(requiredOptions, (options) => {
+		if (!areRequiredOptionsSet(options) || !doesLocationHrefMatchBaseUrl(options.baseUrl)) {
+			return false
+		}
 
-	loaderObserver.observe(loaderElement, {
-		attributes: true,
-		attributeFilter: ['style'],
-		attributeOldValue: true
+		debug('content.js::windowOnload', 'Initing modules.')
+		assign.init()
+
+		loaderObserver.observe(loaderElement, {
+			attributes: true,
+			attributeFilter: ['style'],
+			attributeOldValue: true
+		})
 	})
 }
 

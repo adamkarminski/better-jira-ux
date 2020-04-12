@@ -3,5 +3,6 @@ build
 assets
 *.zip
 secrets.*.js
+hot-reload.js
 .on-save.json
 .DS_Store

@@ -3,9 +3,11 @@ const config = {
 }
 
 export function debug(context, content) {
-	console.debug({
-		...config,
-		'context': context,
-		'content': content
-	})
+	if (process.env.NODE_ENV !== 'production') {
+		console.debug({
+			...config,
+			'context': context,
+			'content': content
+		})
+	}
 }

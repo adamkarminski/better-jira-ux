@@ -1,13 +1,35 @@
 import axios from 'axios'
 
+import { apiOptions, areRequiredOptionsSet } from '../config'
 import { debug } from './logger'
 
 let usersMaxResults
 let jiraApi
 
-chrome.storage.sync.get(['baseUrl', 'apiToken', 'usersMaxResults'], (options) => {
-	debug('jira-web-api::getOptions', options)
+chrome.storage.sync.get(apiOptions, (options) => {
+	debug('jira-web-api::getOptions::options', options)
 
+	if (areRequiredOptionsSet(options)) {
+		setup(options)
+	}
+})
+
+chrome.storage.onChanged.addListener(listenerSetupOnStorageChanged)
+function listenerSetupOnStorageChanged(changes, areaName) {
+	if (areaName !== 'sync') return false
+
+	chrome.storage.sync.get(apiOptions, (options) => {
+		debug('jira-web-api::listenerSetupOnStorageChanged::options', options)
+
+		if (areRequiredOptionsSet(options)) {
+			debug('jira-web-api::listenerSetupOnStorageChanged::areRequiredOptionsSet', true)
+
+			setup(options)
+		}
+	})
+}
+
+function setup(options) {
 	usersMaxResults = options.usersMaxResults !== 0 ? options.usersMaxResults : 150
 
 	jiraApi = axios.create({
@@ -17,7 +39,7 @@ chrome.storage.sync.get(['baseUrl', 'apiToken', 'usersMaxResults'], (options) =>
 			'Accept': 'application/json'
 		}
 	})
-})
+}
 
 async function jiraGetRequest(path, params = {}) {
 	debug('jira-web-api::jiraGetRequest::params', params)

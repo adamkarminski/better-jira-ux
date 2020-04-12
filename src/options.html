@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
 		<title>Better Jira UX - Options</title>
 
@@ -20,7 +19,7 @@
 					<div class="columns is-centered">
 						<div class="column is-two-thirds-tablet is-half-widescreen">
 							<h1 class="title has-text-centered">Setup your way to a Better Jira UX! 🚀</h1>
-							<form>
+							<form id="options-form">
 								<div class="field">
 									<label class="label">
 										🌍 Your Jira's URL adress
@@ -60,7 +59,7 @@
 								</div>
 
 								<div class="field has-text-centered">
-									<a class="button is-link" id="submit">Save</a>
+									<input type="submit" id="submit" class="button is-link" value="Save" data-submitable="true">
 									<p class="help is-success" id="status">&nbsp;</p>
 								</div>
 							</form>
@@ -70,6 +69,6 @@
 			</div>
 		</div>
 
-		<script src="options.js"></script>
+		<!-- <script src="options.bundle.js"></script> -->
 	</body>
 </html>
