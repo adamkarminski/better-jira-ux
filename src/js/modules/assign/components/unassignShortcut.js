@@ -4,13 +4,22 @@ import { issueAssignUser } from '../../../lib/jira-background-api'
 import { getIssue, getSelectedIssueKeyFromUrl } from '../../../jira/components/Issue'
 import { setIssueAvatarToLoading, setIssueAvatarToUnassigned } from '../../../jira/components/issue/Avatar'
 
+function isKeyPressedInEditableElement(e) {
+	let editableElements = ['input', 'textarea']
+
+	return editableElements.indexOf(e.target.tagName.toLowerCase()) > -1 || e.target.isContentEditable
+}
+
 async function listenerUnassignCurrentIssueOnKeyDown(e) {
 	let issueKey = getSelectedIssueKeyFromUrl()
 	let issue = getIssue(issueKey)
 
-	if (e.key === 'u' && issueKey !== false) {
-		setIssueAvatarToLoading(issue)
+	debug('unassignShortcut::listenerUnassignCurrentIssueOnKeyDown::event', e)
+
+	if (e.key === 'u' && issueKey !== false && !isKeyPressedInEditableElement(e)) {
 		debug('unassignShortcut::listenerUnassignCurrentIssueOnKeyDown::issueKey', issueKey)
+
+		setIssueAvatarToLoading(issue)
 
 		await issueAssignUser(issueKey, '')
 
