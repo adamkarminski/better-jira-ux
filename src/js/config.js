@@ -1,5 +1,7 @@
 import { isUndefined, isEmpty } from 'lodash'
 
+import { debug } from './lib/logger'
+
 export const requiredOptions = ['baseUrl', 'apiToken']
 export const apiOptions = requiredOptions.concat(['usersMaxResults'])
 
@@ -22,5 +24,12 @@ export function areRequiredOptionsSet(options) {
 }
 
 export function doesLocationHrefMatchBaseUrl(baseUrl) {
-	return window.location.href.indexOf(baseUrl) > -1
+	return doesUrlMatchBaseUrl(window.location.href, baseUrl)
+}
+
+export function doesUrlMatchBaseUrl(url, baseUrl) {
+	debug('config::doesUrlMatchBaseUrl::url', url)
+	debug('config::doesUrlMatchBaseUrl::baseUrl', baseUrl)
+
+	return url.indexOf(baseUrl) > -1
 }

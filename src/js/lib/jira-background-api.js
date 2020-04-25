@@ -16,7 +16,7 @@ export async function issueAssignUser(issueKey, accountId) {
 	await sendMessage(
 		{
 			'module': 'assign',
-			"action": "issueAssignUser",
+			'action': 'issueAssignUser',
 			'params': {
 				'issueKey': issueKey,
 				'accountId': accountId,

@@ -4,9 +4,11 @@ import '../img/icon-34.png'
 import axios from 'axios'
 
 import { debug } from './lib/logger'
+import iconBadge from './lib/icon-badge'
 
 import assign from './modules/assign/assign.background'
 
+// Register modules
 const modules = {
 	assign
 }
@@ -45,6 +47,8 @@ function init() {
 	debug('background.js::init', 'Initializing background scripts')
 
 	chrome.runtime.onMessage.addListener(processMessage)
+
+	iconBadge.init()
 }
 
 init();
