@@ -3,13 +3,26 @@ export default {
 		'backlog': {
 			'type': 'backlog',
 			'issuesListId': 'ghx-backlog',
-			'avatarContainerSelector': 'span.ghx-end'
+			'avatarContainerSelector': 'span.ghx-end',
+			'hasIssuesList': true,
+			'hasSubtasks': true,
+			'isAvatarWrapped': false,
 		},
 		'board': {
 			'type': 'board',
 			'issuesListId': 'ghx-pool',
-			'avatarContainerSelector': 'div.ghx-stat-2'
+			'avatarContainerSelector': 'div.ghx-stat-2',
+			'hasIssuesList': true,
+			'hasSubtasks': true,
+			'isAvatarWrapped': true,
 		},
+		'issue': {
+			'type': 'issue',
+			'issuesListClass': 'jcZTeP',
+			'avatarContainerSelector': '.sc-Ehqfj',
+			'hasIssuesList': false,
+			'hasSubtasks': true,
+		}
 	},
 	'avatar': {
 		'unassigned': {
@@ -22,3 +35,5 @@ export default {
 		'className': 'js-issue',
 	}
 }
+
+// sc-Ehqfj fpaCiR sc-kiXyGy csPzkd

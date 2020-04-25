@@ -27,11 +27,13 @@ const windowOnload = () => {
 		debug('content.js::windowOnload', 'Initing modules.')
 		assign.init()
 
-		loaderObserver.observe(loaderElement, {
-			attributes: true,
-			attributeFilter: ['style'],
-			attributeOldValue: true
-		})
+		if (loaderObserver instanceof Node) {
+			loaderObserver.observe(loaderElement, {
+				attributes: true,
+				attributeFilter: ['style'],
+				attributeOldValue: true
+			})
+		}
 	})
 }
 

@@ -9,7 +9,7 @@ import assignDropdown from './components/assignDropdown'
 const init = async () => {
 	debug('assign::init', 'Initiating assign module.')
 
-	const supportedPages = ['backlog', 'board']
+	const supportedPages = ['backlog', 'board', 'issue']
 	if (supportedPages.indexOf(getCurrentPageType()) === -1) {
 		return false
 	}

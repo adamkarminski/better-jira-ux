@@ -59,3 +59,9 @@ img.ghx-avatar-img {
 	margin-right: 10px;
 	width: 30px;
 }
+
+.bju-subtask-avatar img {
+	width: 24px;
+    height: 24px;
+    margin: 0 2px 0 11px;
+}
