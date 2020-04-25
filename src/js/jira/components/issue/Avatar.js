@@ -5,21 +5,35 @@ export function getIssueAvatar(issue) {
 }
 
 export function setIssueAvatarToLoading(issue) {
-	getIssueAvatar(issue).setAttribute('style', 'opacity: 50%;')
+	setAvatarToLoading(getIssueAvatar(issue))
 }
 
 export function setIssueAvatarToLoaded(issue) {
-	getIssueAvatar(issue).setAttribute('style', '')
+	setAvatarToLoaded(getIssueAvatar(issue))
 }
 
 export function setIssueAvatar(issue, imageSource, tooltip) {
-	let avatar = getIssueAvatar(issue)
+	setAvatarData(getIssueAvatar(issue), imageSource, tooltip)
+}
 
+export function setIssueAvatarToUnassigned(issue) {
+	setAvatarToUnassigned(getIssueAvatar(issue))
+}
+
+export function setAvatarToLoading(avatar) {
+	avatar.setAttribute('style', 'opacity: 50%;')
+}
+
+export function setAvatarToLoaded(avatar) {
+	avatar.setAttribute('style', '')
+}
+
+export function setAvatarData(avatar, imageSource, tooltip) {
 	avatar.setAttribute('style', '')
 	avatar.setAttribute('src', imageSource)
 	avatar.setAttribute('data-tooltip', tooltip)
 }
 
-export function setIssueAvatarToUnassigned(issue) {
-	setIssueAvatar(issue, config.avatar.unassigned.url, config.avatar.unassigned.name)
+export function setAvatarToUnassigned(avatar) {
+	setAvatarData(avatar, config.avatar.unassigned.url, config.avatar.unassigned.name)
 }
