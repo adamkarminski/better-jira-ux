@@ -33,7 +33,7 @@ const pageType = getCurrentPageType()
 // 	'board': `<span class="ghx-field">${unassignedAvatarImg}</span>`,
 // }
 //
-const unassignedAvatarElement = createUnassignedAvatarImgElement()
+// const unassignedAvatarElement = createUnassignedAvatarImgElement()
 // avatarElement.innerHTML = `<span class="bju-subtask-avatar">${unassignedAvatarImg}</span>`
 
 /**
@@ -110,7 +110,7 @@ function injectUnassignedAvatarsToSubtasks() {
 		avatar = getSubtaskAvatar(subtasks[i].element)
 
 		if (avatar === false) {
-			avatar = setupAvatarData(unassignedAvatarElement, subtasks[i].issueKey)
+			avatar = setupAvatarData(createUnassignedAvatarImgElement(), subtasks[i].issueKey)
 			avatar = wrapElementWithSpan(avatar, 'bju-subtask-avatar')
 
 			injectUnassignedAvatarHtmlToSubtask(subtasks[i].element, avatar)
