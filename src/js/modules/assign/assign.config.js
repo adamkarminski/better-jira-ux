@@ -27,5 +27,9 @@ export default {
 	},
 	'issue': {
 		'className': 'js-issue',
+	},
+	dropdown: {
+		height: 250,
+		width: 300
 	}
 }

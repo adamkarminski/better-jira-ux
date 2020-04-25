@@ -9,6 +9,8 @@ import { getAllAvatars } from '../../../jira/components/IssuesList'
 import { getIssue } from '../../../jira/components/Issue'
 import { setIssueAvatarToLoading, setIssueAvatar } from '../../../jira/components/issue/Avatar'
 
+import assignConfig from '../assign.config'
+
 let dropdown
 
 /**
@@ -56,19 +58,30 @@ function setupUsersDropdown() {
  * 2. Dropdown behavior
  */
 
- function showDropdown(issueKey, left, top) {
+function dropdownPositionFromEvent(e) {
+	let left = e.clientX - e.clientX / window.innerWidth * assignConfig.dropdown.width
+	let top = e.clientY
+
+	if (window.innerHeight - e.clientY <= assignConfig.dropdown.height) {
+		top = e.clientY - assignConfig.dropdown.height
+	}
+
+	return { left, top }
+}
+
+function showDropdown(issueKey, left, top) {
 	let searchElement = dropdown.getElementsByClassName('usersDropdownSearch')[0]
 
- 	dropdown.setAttribute('data-issue-key', issueKey)
- 	dropdown.setAttribute('style', `display: inherit; left: ${left}px; top: ${top}px;`)
+	dropdown.setAttribute('data-issue-key', issueKey)
+	dropdown.setAttribute('style', `display: inherit; left: ${left}px; top: ${top}px;`)
 
 	searchElement.focus()
 	searchElement.select()
- }
+}
 
- function hideDropdown() {
- 	dropdown.setAttribute('style', 'display: none;')
- }
+function hideDropdown() {
+	dropdown.setAttribute('style', 'display: none;')
+}
 
  /**
   * 3. User list behavior
@@ -150,10 +163,9 @@ function listenerShowDropdownOnClick(e) {
 	}
 
 	let issueKey = issueItem.getAttribute('data-issue-key')
-	let leftPosition = e.clientX-150
-	let topPosition = e.clientY
+	let position = dropdownPositionFromEvent(e)
 
-	showDropdown(issueKey, leftPosition, topPosition)
+	showDropdown(issueKey, position.left, position.top)
 }
 
 function bindShowDropdownOnAvatarClick() {
