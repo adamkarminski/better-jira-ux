@@ -176,11 +176,10 @@ function listenerShowDropdownOnClick(e) {
 function bindShowDropdownOnAvatarClick() {
 	document.querySelectorAll('[data-bju-assign]').forEach(element => {
 		if (element.getAttribute('listener') !== 'true') {
-			element.addEventListener('click', listenerShowDropdownOnClick, {capture: true})
+			element.addEventListener('click', listenerShowDropdownOnClick, { capture: true })
 			element.setAttribute('listener', 'true')
 		}
 	})
-
 }
 
 // Hide dropdown on click

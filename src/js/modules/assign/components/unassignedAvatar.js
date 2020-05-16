@@ -5,36 +5,14 @@ import config from '../../../jira/jira.config'
 import { getCurrentPageType } from '../../../jira/components/Page'
 import { getAllAvatarContainers, getAllIssues } from '../../../jira/components/IssuesList'
 import { getIssueKey, getIssueAvatar, getIssueAvatarContainer } from '../../../jira/components/Issue'
-import { findSubtasks, findSubtasksWithIssueKeys, hasSubtaskAvatar, getSubtaskAvatar } from '../../../jira/components/SubtasksList'
+import { findSubtasks, getSubtasksWithIssueKeys } from '../../../jira/components/SubtasksList'
+import { getSubtaskAvatar } from '../../../jira/components/Subtask'
 
 /**
  * Constants
  */
 
 const pageType = getCurrentPageType()
-
-// const unassignedAvatarImg = `<img src="${config.avatar.unassigned.url}"
-// 	class="${config.avatar.className}" data-tooltip="${config.avatar.unassigned.name}" data-bju-assign="on">`
-
-// const unassignedAvatarIssue = `
-// 	<div class="sc-gbuiJB gWiorg sc-gGsJSs eihPQS">
-// 		<div>
-// 			<div style="display: inline-block; position: relative; outline: 0px; height: 28px; width: 28px;">
-// 				<span class="styledCache__StyledSpan-zohhd2-3 fmTriT">
-// 					<span role="img" aria-label="${config.avatar.unassigned.name}" style="background-color: transparent; background-image: url(&quot;${config.avatar.unassigned.url}&quot;); background-position: center center; background-repeat: no-repeat; background-size: cover; border-radius: 50%; display: flex; flex: 1 1 100%; height: 100%; width: 100%;"></span>
-// 				</span>
-// 			</div>
-// 		</div>
-// 	</div>
-// `
-
-// const unassignedAvatarHtml = {
-// 	'backlog': unassignedAvatarImg,
-// 	'board': `<span class="ghx-field">${unassignedAvatarImg}</span>`,
-// }
-//
-// const unassignedAvatarElement = createUnassignedAvatarImgElement()
-// avatarElement.innerHTML = `<span class="bju-subtask-avatar">${unassignedAvatarImg}</span>`
 
 /**
  * Functions
@@ -66,17 +44,6 @@ function setupAvatarData(avatar, issueKey) {
 	return avatar
 }
 
-// function injectUnassignedAvatarHtml(element) {
-// 	let avatar = element.querySelector(`.${config.avatar.className}`)
-//
-// 	if (avatar === null) {
-// 		avatar = avatar.in
-// 		element.innerHTML = unassignedAvatarHtml[pageType] + element.innerHTML
-// 	}  else {
-// 		avatar.setAttribute(avatar)
-// 	}
-// }
-
 function injectUnassignedAvatars() {
 	let issues = getAllIssues()
 
@@ -104,7 +71,7 @@ function injectUnassignedAvatars() {
 function injectUnassignedAvatarsToSubtasks() {
 	let avatar
 
-	let subtasks = findSubtasksWithIssueKeys()
+	let subtasks = getSubtasksWithIssueKeys()
 
 	for (let i = 0; i < subtasks.length; i++) {
 		avatar = getSubtaskAvatar(subtasks[i].element)

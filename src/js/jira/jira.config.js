@@ -35,5 +35,3 @@ export default {
 		'className': 'js-issue',
 	}
 }
-
-// sc-Ehqfj fpaCiR sc-kiXyGy csPzkd
