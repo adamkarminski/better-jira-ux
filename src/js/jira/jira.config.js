@@ -18,8 +18,6 @@ export default {
 		},
 		'issue': {
 			'type': 'issue',
-			'issuesListClass': 'jcZTeP',
-			'avatarContainerSelector': '.sc-Ehqfj',
 			'hasIssuesList': false,
 			'hasSubtasks': true,
 		}

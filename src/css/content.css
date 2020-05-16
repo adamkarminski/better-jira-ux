@@ -61,7 +61,12 @@ img.ghx-avatar-img {
 }
 
 .bju-subtask-avatar img {
+	border-radius: 12px;
 	width: 24px;
-    height: 24px;
-    margin: 0 2px 0 11px;
+	height: 24px;
+	margin: 0 2px 0 11px;
+}
+
+span .bju-subtask-avatar img {
+	margin: 0;
 }

@@ -2,6 +2,7 @@ import { debug } from '../../../lib/logger'
 
 import config from '../../../jira/jira.config'
 
+import { setAvatarData } from '../../../jira/components/issue/Avatar'
 import { getCurrentPageType } from '../../../jira/components/Page'
 import { getAllAvatarContainers, getAllIssues } from '../../../jira/components/IssuesList'
 import { getIssueKey, getIssueAvatar, getIssueAvatarContainer } from '../../../jira/components/Issue'
@@ -77,8 +78,7 @@ function injectUnassignedAvatarsToSubtasks() {
 		avatar = getSubtaskAvatar(subtasks[i].element)
 
 		if (avatar === false) {
-			avatar = setupAvatarData(createUnassignedAvatarImgElement(), subtasks[i].issueKey)
-			avatar = wrapElementWithSpan(avatar, 'bju-subtask-avatar')
+			avatar = createUnassignedAvatar(subtasks[i].issueKey, true)
 
 			injectUnassignedAvatarHtmlToSubtask(subtasks[i].element, avatar)
 		} else {
@@ -91,11 +91,22 @@ function injectUnassignedAvatarHtmlToSubtask(subtask, avatar) {
 	avatar = subtask.insertBefore(avatar, subtask.lastElementChild)
 }
 
+function createUnassignedAvatar(issueKey, wrapWithSpan=false) {
+	let avatar = setupAvatarData(createUnassignedAvatarImgElement(), issueKey)
+
+	if (wrapWithSpan) {
+		avatar = wrapElementWithSpan(avatar, 'bju-subtask-avatar')
+	}
+
+	return avatar
+}
+
 const init = async () => {
 	await injectUnassignedAvatars()
 	await injectUnassignedAvatarsToSubtasks()
 }
 
 export default {
-	init
+	init,
+	createUnassignedAvatar
 }

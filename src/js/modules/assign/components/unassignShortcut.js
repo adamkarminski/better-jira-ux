@@ -12,6 +12,7 @@ function isKeyPressedInEditableElement(e) {
 
 async function listenerUnassignCurrentIssueOnKeyDown(e) {
 	let issueKey = getSelectedIssueKeyFromUrl()
+	// TODO: This breaks for a single issue view - let's fix it!
 	let issue = getIssue(issueKey)
 
 	debug('unassignShortcut::listenerUnassignCurrentIssueOnKeyDown::event', e)

@@ -8,6 +8,8 @@ import config from '../../../jira/jira.config'
 import { getAllAvatars } from '../../../jira/components/IssuesList'
 import { getIssue } from '../../../jira/components/Issue'
 import { setAvatarToLoading, setAvatarData } from '../../../jira/components/issue/Avatar'
+// TODO: This should be part of the Avatar component
+import UnassignedAvatar from './unassignedAvatar'
 
 import assignConfig from '../assign.config'
 
@@ -157,11 +159,6 @@ function listenerShowDropdownOnClick(e) {
 	e.preventDefault()
 	e.stopPropagation()
 
-	// let issueItem = findElementByClassName(e.path, config.issue.className)
-	// if (issueItem === false) {
-	// 	return false
-	// }
-
 	let issueKey = e.target.getAttribute('data-bju-issue-key')
 
 	if (typeof issueKey === 'undefined') {
@@ -231,13 +228,21 @@ async function listenerAssignUserOnClick(e) {
 	let response
 	let issueKey = dropdown.getAttribute('data-issue-key')
 	let accountId = userListItem.getAttribute('data-accountId')
-	let avatar = document.querySelector(`[data-bju-issue-key="${issueKey}"]`)
 
+	let avatar = document.querySelector(`[data-bju-issue-key="${issueKey}"]`)
 	setAvatarToLoading(avatar)
+
 	response = await issueAssignUser(issueKey, accountId)
 
 	let newUser = getUserListItemData(userListItem)
-	setAvatarData(avatar, newUser.avatar.src, newUser.displayName)
+
+	if (avatar.tagName === 'IMG') {
+		setAvatarData(avatar, newUser.avatar.src, newUser.displayName)
+	} else {
+		let newAvatar = UnassignedAvatar.createUnassignedAvatar(issueKey, true)
+		avatar.parentNode.replaceChild(newAvatar, avatar)
+		bindShowDropdownOnAvatarClick()
+	}
 
 	hideDropdown()
 }
