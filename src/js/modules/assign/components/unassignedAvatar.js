@@ -10,12 +10,6 @@ import { findSubtasks, getSubtasksWithIssueKeys } from '../../../jira/components
 import { getSubtaskAvatar } from '../../../jira/components/Subtask'
 
 /**
- * Constants
- */
-
-const pageType = getCurrentPageType()
-
-/**
  * Functions
  */
 
@@ -38,6 +32,7 @@ function wrapElementWithSpan(element, className) {
 	return span
 }
 
+// TODO: Should be renamed
 function setupAvatarData(avatar, issueKey) {
 	avatar.setAttribute('data-bju-assign', 'on')
 	avatar.setAttribute('data-bju-issue-key', issueKey)
@@ -45,14 +40,14 @@ function setupAvatarData(avatar, issueKey) {
 	return avatar
 }
 
-function injectUnassignedAvatars() {
+function setupIssuesAvatars() {
 	let issues = getAllIssues()
-
-	debug('unassignedAvatar::injectUnassignedAvatars::issues', issues)
+	let pageType = getCurrentPageType()
 
 	for (let i = 0; i < issues.length; i++) {
 		let issueKey = getIssueKey(issues[i])
-		let avatar = getIssueAvatar(issues[i])
+		let avatarContainer = getIssueAvatarContainer(issues[i], pageType)
+		let avatar = getIssueAvatar(avatarContainer)
 
 		if (avatar !== null) {
 			setupAvatarData(avatar, issueKey)
@@ -69,7 +64,7 @@ function injectUnassignedAvatars() {
 	}
 }
 
-function injectUnassignedAvatarsToSubtasks() {
+function setupSubtasksAvatars() {
 	let avatar
 
 	let subtasks = getSubtasksWithIssueKeys()
@@ -101,12 +96,22 @@ function createUnassignedAvatar(issueKey, wrapWithSpan=false) {
 	return avatar
 }
 
+const rebind = async (config = {}) => {
+	if (!config.hasOwnProperty('skipIssues')) {
+		await setupIssuesAvatars()
+	}
+	if (!config.hasOwnProperty('skipSubtasks')) {
+		await setupSubtasksAvatars()
+	}
+}
+
 const init = async () => {
-	await injectUnassignedAvatars()
-	await injectUnassignedAvatarsToSubtasks()
+	await setupIssuesAvatars()
+	await setupSubtasksAvatars()
 }
 
 export default {
 	init,
-	createUnassignedAvatar
+	createUnassignedAvatar,
+	rebind
 }

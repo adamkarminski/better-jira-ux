@@ -156,6 +156,8 @@ function getUserListItemData(userListItem) {
 // Show dropdown on click
 
 function listenerShowDropdownOnClick(e) {
+	debug('assignDropdown::listenerShowDropdownOnClick', e)
+
 	e.preventDefault()
 	e.stopPropagation()
 
@@ -257,6 +259,10 @@ function bindAssignOnClick () {
  * 5. Init and export
  */
 
+const rebind = () => {
+	bindShowDropdownOnAvatarClick()
+}
+
 const init = async () => {
 	await setup ()
 	await renderUsersList('')
@@ -268,5 +274,6 @@ const init = async () => {
 }
 
 export default {
-	init
+	init,
+	rebind
 }

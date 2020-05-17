@@ -15,8 +15,8 @@ export function getIssueKey(issue) {
 	return issue.getAttribute('data-issue-key')
 }
 
-export function getIssueAvatar(issue) {
-	return issue.querySelector(`.${config.avatar.className}`)
+export function getIssueAvatar(element) {
+	return element.querySelector(`.${config.avatar.className}`)
 }
 
 export function getIssueAvatarContainer(issue, pageType) {

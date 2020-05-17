@@ -1,5 +1,6 @@
-.ghx-issue img.ghx-avatar-img,
-img.ghx-avatar-img {
+/* .ghx-issue img.ghx-avatar-img,
+img.ghx-avatar-img, */
+span[data-bju-assign="on"] {
 	cursor: pointer;
 }
 
@@ -46,7 +47,7 @@ img.ghx-avatar-img {
 	list-style-type: none;
 	margin: 0;
 	padding: 10px 20px;
-	width: 100%;
+	width: auto;
 }
 
 .usersDropdownItem:hover {
