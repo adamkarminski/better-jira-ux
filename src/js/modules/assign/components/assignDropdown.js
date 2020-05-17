@@ -7,7 +7,9 @@ import { usersGetAll, issueAssignUser } from '../../../lib/jira-background-api'
 import config from '../../../jira/jira.config'
 import { getAllAvatars } from '../../../jira/components/IssuesList'
 import { getIssue } from '../../../jira/components/Issue'
-import { setIssueAvatarToLoading, setIssueAvatar } from '../../../jira/components/issue/Avatar'
+import { setAvatarToLoading, setAvatarData } from '../../../jira/components/issue/Avatar'
+// TODO: This should be part of the Avatar component
+import UnassignedAvatar from './unassignedAvatar'
 
 import assignConfig from '../assign.config'
 
@@ -154,28 +156,29 @@ function getUserListItemData(userListItem) {
 // Show dropdown on click
 
 function listenerShowDropdownOnClick(e) {
+	debug('assignDropdown::listenerShowDropdownOnClick', e)
+
 	e.preventDefault()
 	e.stopPropagation()
 
-	let issueItem = findElementByClassName(e.path, config.issue.className)
-	if (issueItem === false) {
-		return false
+	let issueKey = e.target.getAttribute('data-bju-issue-key')
+
+	if (typeof issueKey === 'undefined') {
+		issueKey = e.target.querySelector(`[data-bju-issue-key]`).getAttribute('data-bju-issue-key')
 	}
 
-	let issueKey = issueItem.getAttribute('data-issue-key')
 	let position = dropdownPositionFromEvent(e)
 
 	showDropdown(issueKey, position.left, position.top)
 }
 
 function bindShowDropdownOnAvatarClick() {
-	getAllAvatars().forEach(element => {
+	document.querySelectorAll('[data-bju-assign]').forEach(element => {
 		if (element.getAttribute('listener') !== 'true') {
-			element.addEventListener('click', listenerShowDropdownOnClick, true)
+			element.addEventListener('click', listenerShowDropdownOnClick, { capture: true })
 			element.setAttribute('listener', 'true')
 		}
 	})
-
 }
 
 // Hide dropdown on click
@@ -227,13 +230,21 @@ async function listenerAssignUserOnClick(e) {
 	let response
 	let issueKey = dropdown.getAttribute('data-issue-key')
 	let accountId = userListItem.getAttribute('data-accountId')
-	let issue = getIssue(issueKey)
 
-	setIssueAvatarToLoading(issue)
+	let avatar = document.querySelector(`[data-bju-issue-key="${issueKey}"]`)
+	setAvatarToLoading(avatar)
+
 	response = await issueAssignUser(issueKey, accountId)
 
 	let newUser = getUserListItemData(userListItem)
-	setIssueAvatar(issue, newUser.avatar.src, newUser.displayName)
+
+	if (avatar.tagName === 'IMG') {
+		setAvatarData(avatar, newUser.avatar.src, newUser.displayName)
+	} else {
+		let newAvatar = UnassignedAvatar.createUnassignedAvatar(issueKey, true)
+		avatar.parentNode.replaceChild(newAvatar, avatar)
+		bindShowDropdownOnAvatarClick()
+	}
 
 	hideDropdown()
 }
@@ -248,6 +259,10 @@ function bindAssignOnClick () {
  * 5. Init and export
  */
 
+const rebind = () => {
+	bindShowDropdownOnAvatarClick()
+}
+
 const init = async () => {
 	await setup ()
 	await renderUsersList('')
@@ -259,5 +274,6 @@ const init = async () => {
 }
 
 export default {
-	init
+	init,
+	rebind
 }

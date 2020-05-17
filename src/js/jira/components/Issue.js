@@ -2,12 +2,27 @@ import { isNull } from 'lodash'
 
 import { debug } from '../../lib/logger'
 
+import config from '../jira.config'
 import { getIssuesList } from './IssuesList'
 
 export function getIssue(issueKey) {
 	let issuesList = getIssuesList()
 
 	return issuesList.querySelectorAll(`div.js-issue[data-issue-key=${issueKey}]`)[0]
+}
+
+export function getIssueKey(issue) {
+	return issue.getAttribute('data-issue-key')
+}
+
+export function getIssueAvatar(element) {
+	return element.querySelector(`.${config.avatar.className}`)
+}
+
+export function getIssueAvatarContainer(issue, pageType) {
+	debug('Issue::getIssueAvatarContainer::pageType', pageType)
+
+	return issue.querySelector(config.page[pageType].avatarContainerSelector)
 }
 
 export function getSelectedIssue() {

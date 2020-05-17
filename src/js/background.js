@@ -48,6 +48,16 @@ function init() {
 
 	chrome.runtime.onMessage.addListener(processMessage)
 
+	chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+		debug('background.js::tabsOnUpdated', changeInfo)
+		if (changeInfo.url) {
+			chrome.tabs.sendMessage( tabId, {
+				message: 'urlChanged',
+				url: changeInfo.url
+			})
+		}
+	});
+
 	iconBadge.init()
 }
 

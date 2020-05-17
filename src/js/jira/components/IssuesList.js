@@ -6,7 +6,19 @@ import { getCurrentPageConfig } from './Page'
 export function getIssuesList() {
 	let pageConfig = getCurrentPageConfig()
 
-	return document.getElementById(pageConfig.issuesListId)
+	if (typeof pageConfig.issuesListId !== 'undefined') {
+		return document.getElementById(pageConfig.issuesListId)
+	} else if (typeof pageConfig.issuesListClass !== 'undefined') {
+		return document.getElementsByClassName(pageConfig.issuesListClass)[0]
+	}
+
+	return false
+}
+
+export function getAllIssues() {
+	let issuesList = getIssuesList()
+
+	return issuesList !== false ? issuesList.querySelectorAll(`.${config.issue.className}`) : []
 }
 
 export function getAllAvatars() {

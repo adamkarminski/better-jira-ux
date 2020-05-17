@@ -19,13 +19,13 @@ export function getCurrentPageType() {
 		}
 	}
 
-	return 'other'
+	return false
 }
 
 export function getCurrentPageConfig() {
 	let type = getCurrentPageType()
 
-	if (type !== 'other') {
+	if (type !== false) {
 		return config.page[type]
 	}
 

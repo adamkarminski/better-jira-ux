@@ -1,5 +1,6 @@
-.ghx-issue img.ghx-avatar-img,
-img.ghx-avatar-img {
+/* .ghx-issue img.ghx-avatar-img,
+img.ghx-avatar-img, */
+span[data-bju-assign="on"] {
 	cursor: pointer;
 }
 
@@ -46,7 +47,7 @@ img.ghx-avatar-img {
 	list-style-type: none;
 	margin: 0;
 	padding: 10px 20px;
-	width: 100%;
+	width: auto;
 }
 
 .usersDropdownItem:hover {
@@ -58,4 +59,15 @@ img.ghx-avatar-img {
 	height: 30px;
 	margin-right: 10px;
 	width: 30px;
+}
+
+.bju-subtask-avatar img {
+	border-radius: 12px;
+	width: 24px;
+	height: 24px;
+	margin: 0 2px 0 11px;
+}
+
+span .bju-subtask-avatar img {
+	margin: 0;
 }
