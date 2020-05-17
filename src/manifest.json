@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Better Jira UX",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "The extension that brings long-needed UX fixes to Jira.",
 	"icons": {
 		"34": "icon-34.png",
