@@ -1,6 +1,7 @@
 /* .ghx-issue img.ghx-avatar-img,
 img.ghx-avatar-img, */
-span[data-bju-assign="on"] {
+span[data-bju-assign="on"],
+img[data-bju-assign="on"] {
 	cursor: pointer;
 }
 

@@ -39,9 +39,12 @@ function onJiraUrlChanged(e) {
 }
 
 function init(element) {
-	currentPageType = getCurrentPageType()
-	targetNode = document.getElementsByTagName('body')[0]
-	window.addEventListener('JiraUrlChanged', onJiraUrlChanged)
+	targetNode = document.getElementById('page-body')
+	if (targetNode instanceof Node) {
+		currentPageType = getCurrentPageType()
+		debug('JiraEvents::JiraPage::init::page-body', document.getElementById('page-body'))
+		window.addEventListener('JiraUrlChanged', onJiraUrlChanged)
+	}
 }
 
 export default {
