@@ -1,6 +1,6 @@
 import { debug } from '../../../lib/logger'
 
-const element = document.getElementsByClassName('adg-throbber')[0]
+let targetNode
 
 function doesStyleImplyVisibility(styleAttribute) {
 	return styleAttribute.indexOf('display: block') > -1
@@ -32,11 +32,14 @@ function observeVisibility(mutations) {
 const visibilityObserver = new MutationObserver(observeVisibility)
 
 function init() {
-	visibilityObserver.observe(element, {
-		attributes: true,
-		attributesFilter: ['style'],
-		attributeOldValue: true,
-	})
+	targetNode = document.getElementsByClassName('adg-throbber')[0]
+	if (targetNode instanceof Node) {
+		visibilityObserver.observe(targetNode, {
+			attributes: true,
+			attributesFilter: ['style'],
+			attributeOldValue: true,
+		})
+	}
 }
 
 function disconnect() {

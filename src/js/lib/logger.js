@@ -4,7 +4,7 @@ const config = {
 
 export function debug(context, content) {
 	if (process.env.NODE_ENV !== 'production') {
-		console.debug({
+		console.log({
 			...config,
 			'context': context,
 			'content': content
