@@ -69,10 +69,6 @@ img[data-bju-assign="on"] {
 	margin: 0 2px 0 11px;
 }
 
-a.gh-sprint-move-to-top:hover {
-	background-color: #f4f5f7;
-}
-
 span .bju-subtask-avatar img {
 	margin: 0;
 }

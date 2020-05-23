@@ -7,12 +7,10 @@ import { debug } from './lib/logger'
 import iconBadge from './lib/icon-badge'
 
 import assign from './modules/assign/assign.background'
-import sprint from './modules/sprint/sprint.background'
 
 // Register modules
 const modules = {
-	assign,
-	sprint
+	assign
 }
 
 function processMessage(request, sender, sendResponse) {
