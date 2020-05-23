@@ -15,7 +15,11 @@ async function listenerUnassignCurrentIssueOnKeyDown(e) {
 	// TODO: This breaks for a single issue view - let's fix it!
 	let issue = getIssue(issueKey)
 
+	debug('unassignShortcut::listenerUnassignCurrentIssueOnKeyDown::event', e)
+
 	if (e.key === 'u' && issueKey !== false && !isKeyPressedInEditableElement(e)) {
+		debug('unassignShortcut::listenerUnassignCurrentIssueOnKeyDown::issueKey', issueKey)
+
 		setIssueAvatarToLoading(issue)
 
 		await issueAssignUser(issueKey, '')

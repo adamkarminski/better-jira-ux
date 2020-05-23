@@ -5,7 +5,6 @@ import { debug } from './logger'
 
 let usersMaxResults
 let jiraApi
-let agileApi
 
 chrome.storage.sync.get(apiOptions, (options) => {
 	debug('jira-web-api::getOptions::options', options)
@@ -40,14 +39,6 @@ function setup(options) {
 			'Accept': 'application/json'
 		}
 	})
-
-	agileApi = axios.create({
-		'baseURL': `${options.baseUrl.replace(/\/$/, "")}/rest/agile/1.0`,
-		'headers': {
-			'Authorization': options.apiToken,
-			'Accept': 'application/json'
-		}
-	})
 }
 
 async function jiraGetRequest(path, params = {}) {
@@ -57,19 +48,13 @@ async function jiraGetRequest(path, params = {}) {
 		'params': params
 	})
 
-	return response
+	return response.data
 }
 
 async function jiraPutRequest(path, data) {
 	let response = await jiraApi.put(path, data)
 
-	return response
-}
-
-async function agilePostRequest(path, data) {
-	let response = await agileApi.post(path, data)
-
-	return response
+	return response.data
 }
 
 export async function jiraIssueAssignUser(issueKey, accountId) {
@@ -85,12 +70,6 @@ export async function jiraIssueAssignUser(issueKey, accountId) {
 
 export async function jiraUsersGetAll() {
 	let response = await jiraGetRequest('/users/search', { maxResults: usersMaxResults })
-
-	return response.data
-}
-
-export async function jiraSprintSwap(sprintId, sprintToSwapWith) {
-	let response = await agilePostRequest(`/sprint/${sprintId}/swap`, { sprintToSwapWith })
 
 	return response
 }
