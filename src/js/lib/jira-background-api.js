@@ -24,3 +24,18 @@ export async function issueAssignUser(issueKey, accountId) {
 		}
 	)
 }
+
+export async function sprintSwap(sprintId, sprintToSwapWith) {
+	let response = await sendMessage(
+		{
+			module: 'sprint',
+			action: 'swap',
+			params: {
+				sprintId,
+				sprintToSwapWith
+			}
+		}
+	)
+
+	return response
+}

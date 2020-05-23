@@ -1,6 +1,6 @@
-export const findElementByClassName = (elementsList, className) => {
+export const findElementByClassName = (elementsList, classToCheck) => {
 	for (let i = 0; i < elementsList.length; i++) {
-		if (elementsList[i].className.indexOf(className) > -1) {
+		if (typeof elementsList[i].className !== 'undefined' && elementsList[i].className.indexOf(classToCheck) > -1) {
 			return elementsList[i]
 		}
 	}
