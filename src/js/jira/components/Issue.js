@@ -20,8 +20,6 @@ export function getIssueAvatar(element) {
 }
 
 export function getIssueAvatarContainer(issue, pageType) {
-	debug('Issue::getIssueAvatarContainer::pageType', pageType)
-
 	return issue.querySelector(config.page[pageType].avatarContainerSelector)
 }
 
